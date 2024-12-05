@@ -62,6 +62,7 @@ const AdminOrders = () => {
       </div>
     </div>
   );
+  
 };
 
 export default AdminOrders;
