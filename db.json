@@ -1,0 +1,567 @@
+{
+  "users": [
+    {
+      "email": "admin@gmail.com",
+      "password": "admin123",
+      "role": "admin",
+      "orders": [],
+      "id": "03a1"
+    },
+    {
+      "id": "d8f9",
+      "name": "fasnas",
+      "email": "fasnas@gmail.com",
+      "password": "fasnas123",
+      "blocked": "true",
+      "confirmPassword": "fasnas123",
+      "cart": [
+        {
+          "id": "2",
+          "name": "Luxury Leather Recliner Sofa Set",
+          "category": "Living",
+          "oldprice": "125999",
+          "price": "99999",
+          "image": " https://m.media-amazon.com/images/I/61P6MpnqlmL._SL1000_.jpg",
+          "description": "Premium leather recliner sofa set with an ergonomic design and adjustable recline.",
+          "quantity": 1
+        }
+      ],
+      "orders": [
+        {
+          "date": "12/2/2024, 9:30:53 AM",
+          "items": [
+            {
+              "id": "2",
+              "name": "Luxury Leather Recliner Sofa Set",
+              "category": "Living",
+              "oldprice": "125999",
+              "price": "99999",
+              "image": " https://m.media-amazon.com/images/I/61P6MpnqlmL._SL1000_.jpg",
+              "description": "Premium leather recliner sofa set with an ergonomic design and adjustable recline.",
+              "quantity": 3
+            }
+          ],
+          "order": 1733112053126,
+          "total": 299997
+        }
+      ]
+    },
+    {
+      "id": "d4cd",
+      "name": "rameez27",
+      "email": "rameeskt27@gmail.com",
+      "password": "12345678",
+      "confirmPassword": "123456789",
+      "blocked": "false",
+      "cart": [],
+      "orders": [
+        {
+          "date": "11/29/2024, 5:33:24 PM",
+          "items": [
+            {
+              "id": "10",
+              "name": "3-Door Wardrobe with Storage",
+              "category": "Bedroom",
+              "oldprice": "45999",
+              "price": "34999",
+              "image": "https://m.media-amazon.com/images/I/8189rirwnLL._SL1500_.jpg",
+              "description": "Spacious 3-door wardrobe with a full-length mirror and multiple shelves for organized storage.",
+              "quantity": 1
+            }
+          ],
+          "order": 1732881804990,
+          "total": 34999
+        },
+        {
+          "date": "12/2/2024, 4:10:09 PM",
+          "items": [
+            {
+              "id": "7",
+              "name": "King Size Solid Wood Bed With Storage",
+              "category": "Bedroom",
+              "oldprice": "69999",
+              "price": "52999",
+              "image": "https://m.media-amazon.com/images/I/61xj8GC-60L._SL1500_.jpg",
+              "description": "Spacious king-size bed crafted from solid wood with built-in storage compartments.",
+              "quantity": 2
+            },
+            {
+              "id": "8",
+              "name": "Accent Chair with Tufted Backrest",
+              "category": "Bedroom",
+              "oldprice": "59999",
+              "price": "44999",
+              "image": "https://m.media-amazon.com/images/I/81bBHPm3uDL._SL1500_.jpg",
+              "description": "Elegant accent chair with a tufted backrest and soft upholstery for a cozy bedroom corner.",
+              "quantity": 1
+            }
+          ],
+          "order": 1733136009604,
+          "total": 150997
+        }
+      ]
+    },
+    {
+      "id": "6f57",
+      "name": "Naseef",
+      "email": "naseef@gmail.com",
+      "password": "12345678",
+      "confirmPassword": "12345678",
+      "blocked": "false",
+      "cart": [],
+      "orders": []
+    },
+    {
+      "id": "4bcb",
+      "name": "jasim",
+      "email": "jasim@gmail.com",
+      "password": "12345678",
+      "confirmPassword": "12345678",
+      "blocked": "false",
+      "cart": [],
+      "orders": []
+    }
+  ],
+  "products": [
+    {
+      "id": "1",
+      "name": "Elliot Fabric 4 Seater Curve Sofa ",
+      "category": "Living",
+      "oldprice": "83999",
+      "price": "60999",
+      "image": "https://m.media-amazon.com/images/I/51JkAizHKxL.jpg",
+      "description": "A contemporary three-seater with premium fabric upholstery.",
+      "stock": 5
+    },
+    {
+      "id": "2",
+      "name": "Luxury Leather Recliner Sofa Set",
+      "category": "Living",
+      "oldprice": "125999",
+      "price": "99999",
+      "image": " https://m.media-amazon.com/images/I/61P6MpnqlmL._SL1000_.jpg",
+      "description": "Premium leather recliner sofa set with an ergonomic design and adjustable recline.",
+      "stock": 5
+    },
+    {
+      "id": "3",
+      "name": "L-Shaped Sectional Fabric Sofa",
+      "category": "Living",
+      "oldprice": "119999",
+      "price": "89999",
+      "image": "https://m.media-amazon.com/images/I/616pJfiYy4L._SL1500_.jpg",
+      "description": "Spacious L-shaped sectional sofa with washable covers and a sturdy build.",
+      "stock": 5
+    },
+    {
+      "id": "4",
+      "name": "Convertible Sofa Bed in Navy Blue",
+      "category": "Living",
+      "oldprice": "69999",
+      "price": "49999",
+      "image": "https://m.media-amazon.com/images/I/51cZ6PWjBSL._SL1000_.jpg",
+      "description": "Multi-functional convertible sofa bed with a sleek design and hidden storage.",
+      "stock": 5
+    },
+    {
+      "id": "5",
+      "name": "Chesterfield Tufted Leather Sofa",
+      "category": "Living",
+      "oldprice": "149999",
+      "price": "109999",
+      "image": "https://m.media-amazon.com/images/I/51upWBDHz5L._SL1080_.jpg",
+      "description": "Classic tufted Chesterfield leather sofa for luxury interiors.",
+      "stock": 5
+    },
+    {
+      "id": "6",
+      "name": "Mid-Century Modern Fabric Sofa",
+      "category": "Living",
+      "oldprice": "74999",
+      "price": "52999",
+      "image": "https://m.media-amazon.com/images/I/817SAsevsSL._SL1500_.jpg",
+      "description": "Retro-inspired fabric sofa with tapered wooden legs and durable upholstery.",
+      "stock": 5
+    },
+    {
+      "id": "7",
+      "name": "King Size Solid Wood Bed With Storage",
+      "category": "Bedroom",
+      "oldprice": "69999",
+      "price": "52999",
+      "image": "https://m.media-amazon.com/images/I/61xj8GC-60L._SL1500_.jpg",
+      "description": "Spacious king-size bed crafted from solid wood with built-in storage compartments.",
+      "stock": 5
+    },
+    {
+      "id": "8",
+      "name": "Accent Chair with Tufted Backrest",
+      "category": "Bedroom",
+      "oldprice": "59999",
+      "price": "44999",
+      "image": "https://m.media-amazon.com/images/I/81bBHPm3uDL._SL1500_.jpg",
+      "description": "Elegant accent chair with a tufted backrest and soft upholstery for a cozy bedroom corner.",
+      "stock": 5
+    },
+    {
+      "id": "9",
+      "name": "Platform Bed With Low Profile",
+      "category": "Bedroom",
+      "oldprice": "49999",
+      "price": "39999",
+      "image": "https://m.media-amazon.com/images/I/71+XI-+MlxL._SL1500_.jpg",
+      "description": "Minimalist platform bed with a sleek, low-profile frame for a modern look.",
+      "stock": 5
+    },
+    {
+      "id": "10",
+      "name": "3-Door Wardrobe with Storage",
+      "category": "Bedroom",
+      "oldprice": "45999",
+      "price": "34999",
+      "image": "https://m.media-amazon.com/images/I/8189rirwnLL._SL1500_.jpg",
+      "description": "Spacious 3-door wardrobe with a full-length mirror and multiple shelves for organized storage.",
+      "stock": 5
+    },
+    {
+      "id": "11",
+      "name": "Bedside Table with Drawer and Open Shelf",
+      "category": "Bedroom",
+      "oldprice": "75999",
+      "price": "58999",
+      "image": "https://m.media-amazon.com/images/I/61XBnKaMIzL._SL1200_.jpg",
+      "description": "Compact bedside table with a single drawer and an open shelf for easy access to essentials.",
+      "stock": 5
+    },
+    {
+      "id": "12",
+      "name": "Trundle Bed With Dual Mattresses",
+      "category": "Bedroom",
+      "oldprice": "65999",
+      "price": "49999",
+      "image": "https://m.media-amazon.com/images/I/71E8dMq7dOL._SL1500_.jpg",
+      "description": "Space-saving trundle bed with dual mattresses and a pull-out design.",
+      "stock": 5
+    },
+    {
+      "id": "13",
+      "name": "Sliding Door Wardrobe with Frosted Glass",
+      "category": "Bedroom",
+      "oldprice": "99999",
+      "price": "74999",
+      "image": "https://m.media-amazon.com/images/I/51CRaC9+yeL._SL1189_.jpg",
+      "description": "Modern wardrobe with sliding doors and frosted glass panels for a sleek look.",
+      "stock": 5
+    },
+    {
+      "id": "14",
+      "name": "Dressing Table with Mirror and Drawers",
+      "category": "Bedroom",
+      "oldprice": "84999",
+      "price": "62999",
+      "image": "https://m.media-amazon.com/images/I/81AkmxQtAdL._SL1500_.jpg",
+      "description": "Stylish dressing table with a large mirror and multiple drawers for convenient makeup storage.",
+      "stock": 5
+    },
+    {
+      "id": "15",
+      "name": "Rustic Wooden Bed Frame",
+      "category": "Bedroom",
+      "oldprice": "64999",
+      "price": "47999",
+      "image": "https://m.media-amazon.com/images/I/71aUDyFAgML._AC_CR0%2C0%2C0%2C0_SX480_SY360_.jpg",
+      "description": "Rustic bed frame made from reclaimed wood, offering a natural and warm aesthetic.",
+      "stock": 5
+    },
+    {
+      "id": "16",
+      "name": "Ergonomic Mesh Office Chair",
+      "category": "Office Furniture",
+      "oldprice": "15999",
+      "price": "10999",
+      "image": "https://m.media-amazon.com/images/I/51XLvIVxC5L._SL1230_.jpg",
+      "description": "Adjustable ergonomic mesh office chair with lumbar support and padded seat for maximum comfort.",
+      "stock": 5
+    },
+    {
+      "id": "17",
+      "name": "Height Adjustable Standing Desk",
+      "category": "Office Furniture",
+      "oldprice": "32999",
+      "price": "24999",
+      "image": "https://m.media-amazon.com/images/I/71uYl5CDDUL._SL1500_.jpg",
+      "description": "Electric standing desk with adjustable height settings and a spacious work surface.",
+      "stock": 5
+    },
+    {
+      "id": "18",
+      "name": "Modern Executive Desk in Walnut Finish",
+      "category": "Office Furniture",
+      "oldprice": "45999",
+      "price": "34999",
+      "image": "https://m.media-amazon.com/images/I/41n6XBml5qL.jpg",
+      "description": "Sleek executive desk with a walnut finish, featuring drawers and ample workspace for professionals.",
+      "stock": 5
+    },
+    {
+      "id": "19",
+      "name": "Compact Office Storage Cabinet",
+      "category": "Office Furniture",
+      "oldprice": "19999",
+      "price": "14999",
+      "image": "https://m.media-amazon.com/images/I/81etDCFcXTL._SL1500_.jpg",
+      "description": "Office storage cabinet with adjustable shelves and a lockable design for securing documents.",
+      "stock": 5
+    },
+    {
+      "id": "20",
+      "name": "Leather Office Chair with High Back Support",
+      "category": "Office Furniture",
+      "oldprice": "24999",
+      "price": "17999",
+      "image": "https://m.media-amazon.com/images/I/71OJlU1tz9L._SL1500_.jpg",
+      "description": "High-back leather office chair with padded armrests and adjustable height settings.",
+      "stock": 5
+    },
+    {
+      "id": "21",
+      "name": "Minimalist Wooden Work Desk",
+      "category": "Office Furniture",
+      "oldprice": "18999",
+      "price": "13999",
+      "image": "https://m.media-amazon.com/images/I/61QBWnpmIGL._SL1200_.jpg",
+      "description": "Simple and stylish wooden work desk with a natural finish, ideal for compact office spaces.",
+      "stock": 5
+    },
+    {
+      "id": "22",
+      "name": "3-Tier Office Bookshelf",
+      "category": "Office Furniture",
+      "oldprice": "12999",
+      "price": "8999",
+      "image": "https://m.media-amazon.com/images/I/81uXi3PNX3L._SL1500_.jpg",
+      "description": "Durable 3-tier bookshelf with open shelves for easy access to books and office supplies.",
+      "stock": 5
+    },
+    {
+      "id": "23",
+      "name": "L-Shaped Office Desk with Storage",
+      "category": "Office Furniture",
+      "oldprice": "27999",
+      "price": "20999",
+      "image": "https://m.media-amazon.com/images/I/61WYfraZZmL._SL1500_.jpg",
+      "description": "Spacious L-shaped desk with built-in storage drawers and cable management features.",
+      "stock": 5
+    },
+    {
+      "id": "24",
+      "name": "Compact Rolling File Cabinet",
+      "category": "Office Furniture",
+      "oldprice": "9999",
+      "price": "6999",
+      "image": "https://m.media-amazon.com/images/I/51pUqh05EkL._SL1000_.jpg",
+      "description": "Mobile file cabinet with wheels, featuring a lockable top drawer for added security.",
+      "stock": 5
+    },
+    {
+      "id": "25",
+      "name": "Office Conference Table with Chairs",
+      "category": "Office Furniture",
+      "oldprice": "54999",
+      "price": "41999",
+      "image": "https://m.media-amazon.com/images/I/71G-TC9fcML._SL1500_.jpg",
+      "description": "Elegant office conference table set with six cushioned chairs for team meetings and collaborations.",
+      "stock": 5
+    },
+    {
+      "id": "27",
+      "name": "4-Seater Glass Top Dining Table",
+      "category": "Dining",
+      "oldprice": "39999",
+      "price": "29999",
+      "image": "https://m.media-amazon.com/images/I/51B1P7oShiL._SL1000_.jpg",
+      "description": "Compact four-seater dining table with a sleek tempered glass top and metal frame for modern homes.",
+      "stock": 5
+    },
+    {
+      "id": "28",
+      "name": "Extendable Dining Table with 6 Chairs",
+      "category": "Dining",
+      "oldprice": "79999",
+      "price": "59999",
+      "image": "https://m.media-amazon.com/images/I/51YMBJ1GygL.jpg",
+      "description": "Versatile dining table with an extendable top and six matching chairs, perfect for larger gatherings.",
+      "stock": 5
+    },
+    {
+      "id": "29",
+      "name": "Round Marble Dining Table with 4 Chairs",
+      "category": "Dining",
+      "oldprice": "69999",
+      "price": "52999",
+      "image": "https://m.media-amazon.com/images/I/51Td6nDDtqL.jpg",
+      "description": "Luxurious round dining table with a marble top and four upholstered chairs for a sophisticated look.",
+      "stock": 5
+    },
+    {
+      "id": "30",
+      "name": "Minimalist Bar Table with Stools",
+      "category": "Dining",
+      "oldprice": "29999",
+      "price": "21999",
+      "image": "https://m.media-amazon.com/images/I/71HJIvwPR6L._SL1500_.jpg",
+      "description": "Compact bar table with two stools, featuring a sleek design suitable for small dining spaces.",
+      "stock": 5
+    },
+    {
+      "id": "31",
+      "name": "Dining Bench with Upholstered Seat",
+      "category": "Dining",
+      "oldprice": "19999",
+      "price": "14999",
+      "image": "https://m.media-amazon.com/images/I/71SwwBRq6ML._SL1500_.jpg",
+      "description": "Stylish dining bench with a cushioned seat, ideal for adding flexibility to your dining setup.",
+      "stock": 5
+    },
+    {
+      "id": "32",
+      "name": "Rustic Wooden Dining Table Set",
+      "category": "Dining",
+      "oldprice": "54999",
+      "price": "41999",
+      "image": "https://m.media-amazon.com/images/I/6151upixbRL._SL1408_.jpg",
+      "description": "Rustic-style dining table with a natural wood finish and matching chairs, perfect for farmhouse interiors.",
+      "stock": 5
+    },
+    {
+      "id": "33",
+      "name": "Foldable Dining Table with Storage",
+      "category": "Dining",
+      "oldprice": "45999",
+      "price": "34999",
+      "image": "https://m.media-amazon.com/images/I/61+VeVM+M5L._SL1500_.jpg",
+      "description": "Space-saving foldable dining table with integrated storage, ideal for compact dining areas.",
+      "stock": 5
+    },
+    {
+      "id": "34",
+      "name": "Velvet Upholstered Dining Chair Set",
+      "category": "Dining",
+      "oldprice": "21999",
+      "price": "16999",
+      "image": "https://m.media-amazon.com/images/I/61ABoY7lq5L._SL1500_.jpg",
+      "description": "Set of two dining chairs with velvet upholstery and gold-tone metal legs for a chic dining experience.",
+      "stock": 5
+    },
+    {
+      "id": "35",
+      "name": "Modern Sideboard Buffet Cabinet",
+      "category": "Dining",
+      "oldprice": "29999",
+      "price": "21999",
+      "image": "https://m.media-amazon.com/images/I/71unp83DcsL._SL1500_.jpg",
+      "description": "Multi-functional sideboard cabinet with ample storage, perfect for organizing dining essentials.",
+      "stock": 5
+    },
+    {
+      "id": "36",
+      "name": "Modular Kitchen Cabinet Set",
+      "category": "Kitchen",
+      "oldprice": "79999",
+      "price": "64999",
+      "image": "https://m.media-amazon.com/images/I/61CjP7O92IL._SL1500_.jpg",
+      "description": "Modern modular kitchen cabinet set with multiple compartments for organized storage.",
+      "stock": 5
+    },
+    {
+      "id": "37",
+      "name": "Wooden Kitchen Island with Drawers",
+      "category": "Kitchen",
+      "oldprice": "35999",
+      "price": "27999",
+      "image": "https://m.media-amazon.com/images/I/91OMZUasE4L._SL1500_.jpg",
+      "description": "Compact kitchen island with drawers and shelves for extra workspace and storage.",
+      "stock": 5
+    },
+    {
+      "id": "38",
+      "name": "3-Tier Metal Kitchen Trolley",
+      "category": "Kitchen",
+      "oldprice": "9999",
+      "price": "7499",
+      "image": "https://m.media-amazon.com/images/I/712MfcBIfqL._SL1500_.jpg",
+      "description": "Rolling kitchen trolley with three metal shelves, perfect for serving or storage.",
+      "stock": 5
+    },
+    {
+      "id": "39",
+      "name": "Wall-Mounted Kitchen Shelf Set",
+      "category": "Kitchen",
+      "oldprice": "14999",
+      "price": "10999",
+      "image": "https://m.media-amazon.com/images/I/616AeaxPCML._SL1500_.jpg",
+      "description": "Set of wall-mounted shelves for convenient storage of spices, jars, and utensils.",
+      "stock": 5
+    },
+    {
+      "id": "40",
+      "name": "Stainless Steel Kitchen Rack",
+      "category": "Kitchen",
+      "oldprice": "12999",
+      "price": "8999",
+      "image": "https://m.media-amazon.com/images/I/61PbTpsz9tL._SL1258_.jpg",
+      "description": "Durable stainless steel rack for storing pots, pans, and other kitchen essentials.",
+      "stock": 5
+    },
+    {
+      "id": "41",
+      "name": "Compact Breakfast Table with Stools",
+      "category": "Kitchen",
+      "oldprice": "25999",
+      "price": "19999",
+      "image": "https://m.media-amazon.com/images/I/71EskVk3vfL._SL1200_.jpg",
+      "description": "Small breakfast table set with two stools, ideal for limited kitchen spaces.",
+      "stock": 5
+    },
+    {
+      "id": "42",
+      "name": "Pantry Cabinet with Sliding Doors",
+      "category": "Kitchen",
+      "oldprice": "34999",
+      "price": "26999",
+      "image": "https://m.media-amazon.com/images/I/41sg2eU08vL._SL1470_.jpg",
+      "description": "Spacious pantry cabinet with sliding doors and adjustable shelves for versatile storage.",
+      "stock": 5
+    },
+    {
+      "id": "43",
+      "name": "Multi-Compartment Dish Rack",
+      "category": "Kitchen",
+      "oldprice": "6999",
+      "price": "4999",
+      "image": "https://m.media-amazon.com/images/I/71-Mr-KebQL._SL1500_.jpg",
+      "description": "Stylish dish rack with multiple compartments for plates, glasses, and cutlery.",
+      "stock": 5
+    },
+    {
+      "id": "44",
+      "name": "Kitchen Workstation Sink",
+      "category": "Kitchen",
+      "oldprice": "29999",
+      "price": "22999",
+      "image": "https://m.media-amazon.com/images/I/511TQ9UMnRL.jpg",
+      "description": "Multi-functional kitchen sink with an integrated chopping board and drying rack.",
+      "stock": 5
+    },
+    {
+      "id": "45",
+      "name": "Adjustable Kitchen Bar Stools",
+      "category": "Kitchen",
+      "oldprice": "19999",
+      "price": "14999",
+      "image": "https://m.media-amazon.com/images/I/51A1E9WVe5L._SL1000_.jpg",
+      "description": "Set of two adjustable height bar stools with comfortable cushioned seats.",
+      "stock": 5
+    }
+  ]
+}
