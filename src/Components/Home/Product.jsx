@@ -4,7 +4,9 @@ import { Link, useLocation } from 'react-router-dom';
 
 import { FaShoppingCart,FaHeart}  from 'react-icons/fa'
 
-import { userContext } from '../Context/Context';
+
+import { useDispatch } from 'react-redux';
+import { addToCart } from '../Redux/Slice';
 
 const Product = () => {
     const { pathname } = useLocation();
@@ -14,9 +16,29 @@ const Product = () => {
     }, [pathname]);
 
 
+    const dispatch=useDispatch()
+
+
     const [products, setProducts] = useState([]);
 
-    const{ addToCart}=useContext(userContext)
+
+    const handleAddToCart = (furniture) => {
+      const userId = localStorage.getItem("id");
+  
+      if (!userId) {
+        toast.error("Please log in to add items to your cart.", {
+          position: "top-center",
+          autoClose: 2000,
+        });
+        navigate("/login");
+        return;
+      }
+  
+      // Dispatching addToCart action to Redux
+      dispatch(addToCart(furniture)); // `furniture` is the product being added to the cart
+    };
+
+    
 
     
     useEffect(() => {
@@ -53,7 +75,7 @@ const Product = () => {
             </Link>      
                 
                 <div className="flex justify-center mt-4">
-                    <button onClick={() => addToCart(furniture)} className="flex items-end bg-- bg-stone-800 hover:bg-stone-900 text-white text-sm font-semibold py-1 px-3  shadow-md transform transition-transform duration-300 hover:scale-105 focus:outline-none">
+                    <button onClick={()=>handleAddToCart(furniture)} className="flex items-end bg-- bg-stone-800 hover:bg-stone-900 text-white text-sm font-semibold py-1 px-3  shadow-md transform transition-transform duration-300 hover:scale-105 focus:outline-none">
                     <FaShoppingCart size={20} className="mr-2" />
                     Add to Cart
                     </button>

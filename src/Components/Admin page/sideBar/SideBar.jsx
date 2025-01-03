@@ -1,23 +1,24 @@
-import React, { useContext } from 'react';
+ 
 import { FaHome, FaShoppingCart, FaBoxOpen, FaUsers, FaBan } from 'react-icons/fa';
+import { useDispatch } from 'react-redux';
 import { useNavigate,Link } from 'react-router-dom';
-import { userContext } from '../../Context/Context';
+import { setLogout } from '../../Redux/Slice';
+import { toast } from 'react-toastify';
+
 
 function SideBar() {
   const navigate=useNavigate();
-  const{setLogin}=useContext(userContext)
 
-  const adminLogout=()=>{
-    localStorage.clear(); 
-    setLogin(false); 
-    navigate("/login");
-    toast.success("You successfully logout", {
-      position: "top-center",
-      autoClose: 2000, 
-    })
-    
+const dispatch=useDispatch()
+  const handleLogout = () => {
+   dispatch(setLogout()); // Dispatch logout action
+    navigate('/login'); // Redirect to login page
+    toast.success('You successfully logged out', {
+      position: 'top-center',
+      autoClose: 2000,
+    });
+  };
 
-  }
   return (
     <div className="flex select-none">
       {/* Sidebar */}
@@ -83,7 +84,7 @@ function SideBar() {
             </li>
             </Link>
             <button 
-             onClick={adminLogout} 
+             onClick={handleLogout} 
              className="w-full bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg  transition duration-200 ease-in-out mt-44">
              Logout
              </button>

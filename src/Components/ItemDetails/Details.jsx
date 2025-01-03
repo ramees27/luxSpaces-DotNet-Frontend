@@ -1,18 +1,20 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useParams, Link ,useNavigate, useLocation} from 'react-router-dom';
-import { userContext } from '../Context/Context';
 import axios from 'axios';
+import { addToCart } from '../Redux/Slice';
+import { useDispatch } from 'react-redux';
 
 const Details = () => {
    
     const { pathname } = useLocation();
+    const dispatch=useDispatch()
 
     useEffect(() => {
       window.scrollTo(0, 0); 
     }, [pathname]);
 
 
-const{addToCart} = useContext(userContext)
+
   const { furnitureId } = useParams(); 
   const [product, setProduct] = useState({}); 
  
@@ -23,6 +25,24 @@ const{addToCart} = useContext(userContext)
       setProduct(response.data); 
     });
   }, [furnitureId]);
+
+
+  const handleAddToCart = (furniture) => {
+       const userId = localStorage.getItem("id");
+   
+       if (!userId) {
+         toast.error("Please log in to add items to your cart.", {
+           position: "top-center",
+           autoClose: 2000,
+         });
+         navigate("/login");
+         return;
+       }
+   
+       // Dispatching addToCart action to Redux
+       dispatch(addToCart(furniture)); // `furniture` is the product being added to the cart
+     };
+ 
 
 
 
@@ -52,7 +72,7 @@ const{addToCart} = useContext(userContext)
 
       
         <div className="p-6 flex justify-center">
-          <button onClick={() => addToCart(product)} className="bg-green-500 text-white text-lg font-semibold py-3 px-6 rounded-full hover:bg-green-600 focus:outline-none transition-all duration-300 transform hover:scale-105">
+          <button onClick={() => handleAddToCart(product)} className="bg-green-500 text-white text-lg font-semibold py-3 px-6 rounded-full hover:bg-green-600 focus:outline-none transition-all duration-300 transform hover:scale-105">
             Add to Cart
           </button>
           

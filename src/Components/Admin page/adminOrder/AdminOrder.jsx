@@ -21,9 +21,8 @@ const AdminOrders = () => {
         {users
           .filter(user => user.orders && user.orders.length > 0) 
           .map((user) => (
-            user.orders
-              .sort((a, b) => b.order - a.order) // Sort orders by latest
-              .map((order, index) => (
+            user.orders 
+              .slice().reverse().map((order, index) => (
                 <div key={index} className="bg-white p-6 rounded-lg shadow-md">
                   <h3 className="text-xl font-semibold text-gray-700">
                     Order #{order.order}

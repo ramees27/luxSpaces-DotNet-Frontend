@@ -1,28 +1,36 @@
-import React, { useState, useContext } from 'react';
-import { productContex } from '../adminUsers/AdminContext/AdminContext';
+import React, { useState,useEffect } from 'react';
+// import { productContex } from '../adminUsers/AdminContext/AdminContext';
 import axios from 'axios';
+import { useDispatch, useSelector } from 'react-redux';
+import { addProduct, deleteProduct, editProduct, fetchProducts } from '../../Redux/AdminSlice';
 
 const AdminProducts = () => {
-  const { adminProduct, setAdminProduct, editProduct } = useContext(productContex);
+
 
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentProduct, setCurrentProduct] = useState(null);
   const [isAdding, setIsAdding] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState('All');
 
+  const dispatch = useDispatch();
+  const adminProduct = useSelector((state) => state.admin.adminProduct);
+
+  useEffect(() => {
+    dispatch(fetchProducts()); // Fetch products when component mounts
+  }, [dispatch]);
+
+
+
+
+
+
 
 // delete
-  const handleDelete = (id) => {
-    axios.delete(`http://localhost:5000/products/${id}`).then(() => {
-      setAdminProduct((prevProducts) => prevProducts.filter((product) => product.id !== id));
-    });
-  };
+const handleDelete = (id) => {
+  dispatch(deleteProduct(id));
+};
 
-  const handleEdit = (product) => {
-    setCurrentProduct(product);
-    setIsModalOpen(true);
-    setIsAdding(false);
-  };
+ 
 
   const handleAdd = () => {
     setCurrentProduct({
@@ -37,17 +45,15 @@ const AdminProducts = () => {
     setIsAdding(true);
   };
 
-  const handleSave = () => {
+ const handleSave = () => {
     if (isAdding) {
-      axios.post('http://localhost:5000/products', currentProduct).then((response) => {
-        setAdminProduct((prevProducts) => [...prevProducts, response.data]);
-        setIsModalOpen(false);
-      });
+      dispatch(addProduct(currentProduct));
     } else {
-      editProduct(currentProduct);
-      setIsModalOpen(false);
+      dispatch(editProduct(currentProduct));
     }
+    setIsModalOpen(false);
   };
+
 
   const filteredProducts =
     selectedCategory === 'All'
@@ -115,7 +121,11 @@ const AdminProducts = () => {
                 <td className="px-4 py-3">{product.description}</td>
                 <td className="px-4 py-3 flex space-x-2">
                   <button
-                    onClick={() => handleEdit(product)}
+                    onClick={() =>{
+                       setCurrentProduct(product)
+                      setIsModalOpen(true)
+                      setIsAdding(false); 
+                    }}
                     className="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-md"
                   >
                     Edit
@@ -165,7 +175,7 @@ const AdminProducts = () => {
             <input
               type="number"
               value={currentProduct.stock}
-              onChange={(e) => setCurrentProduct({ ...currentProduct, stock: e.target.value })}
+              onChange={(e) => setCurrentProduct({ ...currentProduct, stock: Number(e.target.value) })}
               className="w-full border border-gray-300 rounded px-2 py-1 mb-4"
             />
             <label className="block mb-2">Description:</label>

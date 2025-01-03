@@ -1,15 +1,20 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { FaShoppingCart, FaHeart, FaChair, FaSearch } from "react-icons/fa";
-import { userContext } from "../Context/Context";
+
 import { toast } from "react-toastify";
+import {  searchProducts,setLogout,restoreUser} from "../Redux/Slice"
+import { useDispatch, useSelector } from "react-redux";
 
 const Navbar = () => {
   const navigate = useNavigate();
-  const { login, setLogin, searchProducts } = useContext(userContext);
+
   const [searchTerm, setSearchTerm] = useState("");
-  const [searchResults, setSearchResults] = useState([]);
-  console.log(searchProducts)
+
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.app.user);
+  const login = useSelector((state) => state.app.login);
+  const searchResults = useSelector((state) => state.app.searchResults);
 
   const handleCarticon = () => {
     const userId = localStorage.getItem("id");
@@ -24,9 +29,10 @@ const Navbar = () => {
     }
   };
 
-  const handleLogout = () => {
+  const handleLogout = () =>  {
+
     localStorage.clear();
-    setLogin(false);
+     dispatch(setLogout());
     navigate("/");
     toast.success("You successfully logged out", {
       position: "top-center",
@@ -34,27 +40,34 @@ const Navbar = () => {
     });
   };
 
-  const userName = localStorage.getItem("name");
+  
 
-  const handleSearch = async (e) => {
+  // search function
+
+  const handleSearch = (e) => {
     const term = e.target.value;
     setSearchTerm(term);
 
     if (term.trim() === "") {
-      setSearchResults([]);
+      dispatch(searchProducts("")); // Clear search results
       return;
     }
 
-    const results = await searchProducts(term);
-    setSearchResults(results);
+    dispatch(searchProducts(term)); // Fetch filtered results
   };
 
   const handleProductClick = (productId) => {
-    navigate(`/details/${productId}`);
-    setSearchTerm(""); // Clear the search bar
-    setSearchResults([]); // Clear the results
+    navigate(`/details/${productId}`); // Navigate to product details
+    setSearchTerm(""); // Clear local state
+    dispatch(searchProducts("")); // Clear Redux state
   };
 
+
+  useEffect(() => {
+    // Try restoring the user from localStorage when the app loads
+    dispatch(restoreUser());
+  }, [dispatch]);
+  
   return (
     <div>
       <nav
@@ -102,7 +115,7 @@ const Navbar = () => {
             </div>
             {login ? (
               <>
-                <span>Hi, {userName} </span>
+                <span>Hi, {user?.name||"user"} </span>
                 <button
                   onClick={handleLogout}
                   className="text-white bg-gray-600 hover:bg-gray-700 px-4 py-2 rounded-lg transition duration-300 shadow-md"

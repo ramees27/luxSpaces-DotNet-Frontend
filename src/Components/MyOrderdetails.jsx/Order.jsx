@@ -1,14 +1,42 @@
 import { Navigate, useLocation, useNavigate } from "react-router-dom";
-import React,{useContext} from "react";
-import { userContext } from "../Context/Context";
+import React,{ useEffect, useState} from "react";
+
+import { useDispatch, useSelector } from "react-redux";
+import { confirmOrder } from "../Redux/Slice";
+import axios from "axios";
 
 const Order = () => {
+  // const totalAmount=useSelector((state)=>state.app.totalAmount)
   
+  const [totalAmount, setTotalAmount] = useState(0)
+
+  const dispatch=useDispatch()
   
-  const { confirmOrder,totalAmount } = useContext(userContext); 
-  
-  
+ 
   const navigate= useNavigate();
+
+
+
+  useEffect(() => {
+    const fetchTotalAmount = async () => {
+      const userId = localStorage.getItem("id"); // Assuming user ID is stored in localStorage
+      const response = await axios.get(`http://localhost:5000/users/${userId}`);
+      const userCart = response.data.cart || [];
+
+     
+      const amount = userCart.reduce(
+        (total, product) => total + product.price * product.quantity,
+        0
+      );
+      setTotalAmount(amount); 
+    };
+
+    fetchTotalAmount();
+  }, []);
+
+ 
+
+  
 
   return (
     <div
@@ -19,7 +47,7 @@ const Order = () => {
        
         <form className="w-2/3 bg-stone-500 p-6 rounded-l-lg" onSubmit={e => {
           e.preventDefault();
-          confirmOrder(); 
+          dispatch(confirmOrder({navigate})); 
         }}>
           <h1 className="text-2xl font-bold text-white mb-6 bg-gradient-to-r from-stone-500 to-stone-700 px-4 py-2 rounded-lg shadow-md">
             Place Your Order
@@ -113,7 +141,7 @@ const Order = () => {
         <div className="w-1/3 bg-stone-700 text-white p-6 rounded-r-lg flex flex-col items-center">
           <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
           <div className="text-lg font-semibold mb-4">
-            Total Price: ₹{totalAmount()}
+            Total Price: ₹{totalAmount}
           </div>
           
           <button

@@ -13,7 +13,7 @@ import Wishlist from './Components/Home/Wishlist'
 import MyOrder from './Components/Home/MyOrder'
 import Layout from './Components/Layout/Layout'
 import Details from './Components/ItemDetails/Details'
-import Context from './Components/Context/Context'
+
 import Order from './Components/MyOrderdetails.jsx/Order'
 
 import AdminLayout from './Components/Admin page/LayOutAdmin/AdminLayout'
@@ -23,18 +23,20 @@ import AdminUsers from './Components/Admin page/adminUsers/AdminUsers'
 import AdminOrder from './Components/Admin page/adminOrder/adminOrder'
 import AdminProducts from './Components/Admin page/AdminProducts/AdminProducts'
 import Blocks from './Components/Admin page/adminBlocks/Blocks'
-import AdminContext from './Components/Admin page/adminUsers/AdminContext/AdminContext'
-
+// import AdminContext from './Components/Admin page/adminUsers/AdminContext/AdminContext'
+import Store from  './Components/Redux/Store'
+import { Provider } from 'react-redux'
 
 
 function App() {
 
 
   return (
+    <Provider store={Store}>
     <Router>
-            <Context>
-
-        <AdminContext>
+          
+            
+        
 
         <ToastContainer />
         <Routes>
@@ -67,11 +69,11 @@ function App() {
 
         </Routes>
 
-      </AdminContext>
-      </Context>
+    
+      
 
     </Router>
-
+     </Provider>
   )
 }
 

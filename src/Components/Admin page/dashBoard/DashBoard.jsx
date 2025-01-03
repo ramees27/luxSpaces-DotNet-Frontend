@@ -14,7 +14,7 @@ const DashBoard = () => {
   useEffect(() => {
     axios.get('http://localhost:5000/users')
       .then((response) => {
-        const userCount = response.data.length;
+        const userCount = response.data.length-1;
         setStats((prevStats) => ({ ...prevStats, users: userCount }));
       });
 
@@ -39,7 +39,7 @@ const DashBoard = () => {
     
     axios.get('http://localhost:5000/products')
       .then((response) => {
-        const stockCount = response.data.reduce((total, product) => total + product.stock, 0);
+        const stockCount = response.data.reduce ((total, product) => total + Number(product.stock), 0);
       
         setStats((prevStats) => ({ ...prevStats, stocks: stockCount }));
       });

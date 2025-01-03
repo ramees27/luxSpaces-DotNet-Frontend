@@ -1,63 +1,33 @@
-import React, { useContext, useState, useEffect } from 'react';
-import { Formik, Form, Field, ErrorMessage } from 'formik';
-import * as Yup from 'yup';
-import { useNavigate, useLocation } from 'react-router-dom';
-import axios from 'axios';
-import { userContext } from '../Context/Context';
-import { toast } from 'react-toastify';
-import { FaHome } from 'react-icons/fa';
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate, useLocation } from "react-router-dom";
+import { Formik, Form, Field, ErrorMessage } from "formik";
+import * as Yup from "yup";
+import { FaHome } from "react-icons/fa";
+import { loginUser } from "../Redux/Slice"; // Adjust the path as needed
 
 function Login() {
-  const [errorMessage, setErrorMessage] = useState('');
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const { setLogin } = useContext(userContext);
-  
   const { pathname } = useLocation();
+  const errorMessage = useSelector((state) => state.app.errorMessage);
 
   useEffect(() => {
-    window.scrollTo(0, 0); 
+    window.scrollTo(0, 0);
   }, [pathname]);
 
-  // yup validation
+  // Yup validation schema
   const validationSchema = Yup.object({
     email: Yup.string()
-      .email('Invalid email format')
-      .required('Email is required'),
+      .email("Invalid email format")
+      .required("Email is required"),
     password: Yup.string()
-      .required('Password is required')
-      .min(6, 'Password must be at least 6 characters'),
+      .required("Password is required")
+      .min(6, "Password must be at least 6 characters"),
   });
 
-  const handleSubmit = async (values) => {
-    const response = await axios.get(`http://localhost:5000/users?email=${values.email}`);
-    const user = response.data.find((user) => user.email === values.email);
-
-    if (user) {
-      if (user.password === values.password) {
-        if (user.blocked === "true") {
-          setErrorMessage('Admin blocked by user. You cannot log in.');
-          return; // Stop further execution
-        }
-
-        setLogin(true);
-        localStorage.setItem("name", user.name);
-        localStorage.setItem("id", user.id);
-
-        if (user.role === "admin") {
-          navigate("/adminlayout");
-        } else {
-          navigate('/');
-          toast.success("You successfully logged in!", {
-            position: "top-center",
-            autoClose: 2000,
-          });
-        }
-      } else {
-        setErrorMessage('Incorrect password!');
-      }
-    } else {
-      setErrorMessage('User not found! Please register.');
-    }
+  const handleSubmit = (values) => {
+    dispatch(loginUser(values, navigate));
   };
 
   return (
@@ -67,14 +37,16 @@ function Login() {
         backgroundImage: "url('https://cdn.pixabay.com/photo/2018/03/04/09/51/space-3197611_1280.jpg')",
         objectFit: "cover",
         width: "100%",
-        height: "100vh", // Ensure the background takes full height of the viewport
+        height: "100vh",
       }}
     >
-      <div className="p-8 rounded-lg shadow-lg max-w-sm w-full bg-stone-400"
+      <div
+        className="p-8 rounded-lg shadow-lg max-w-sm w-full bg-stone-400"
         style={{
           boxShadow: "0 10px 20px rgba(0, 0, 0, 0.3)",
           transformStyle: "preserve-3d",
-        }}>
+        }}
+      >
         <h1 className="text-2xl font-bold text-center mb-6">Login</h1>
 
         {errorMessage && (
@@ -85,8 +57,8 @@ function Login() {
 
         <Formik
           initialValues={{
-            email: '',
-            password: '',
+            email: "",
+            password: "",
           }}
           validationSchema={validationSchema}
           onSubmit={handleSubmit}
@@ -137,10 +109,9 @@ function Login() {
         </Formik>
       </div>
 
-      {/* Home Button at Top Left */}
       <div
         className="absolute top-12 left-20 p-4 bg-gray-800 text-white rounded-full cursor-pointer hover:bg-gray-900 transition duration-300"
-        onClick={() => navigate('/')}
+        onClick={() => navigate("/")}
       >
         <FaHome size={24} />
       </div>
@@ -149,3 +120,4 @@ function Login() {
 }
 
 export default Login;
+
