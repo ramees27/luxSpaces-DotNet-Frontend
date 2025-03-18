@@ -5,99 +5,64 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { FaHome } from 'react-icons/fa';
 import { useDispatch, useSelector } from 'react-redux';
 import axios from 'axios';
-import { setCart,removeFromCart } from '../Redux/Slice';
+import { setCart,removeFromCart, fetchCartItems ,increaseQuantity, decreaseQuantity} from '../Redux/Slice';
 
 const Cart = () => {
   const dispatch = useDispatch()
 
   const navigate = useNavigate()
-  const totalAmount = useSelector((state) => state.app.totalAmount);
+  // const totalAmount = useSelector((state) => state.app.totalAmount);
   
-  const cart = useSelector((state) => state.app.cart)
+  const cart = useSelector((state) => state.app.cart.items)
+  const Price=useSelector((state)=>state.app.cart.totalPrice)
+  
+  
+  // const { setCart, totalAmount } = useSelector((state) => state.project); 
 
-  const { pathname } = useLocation();
+  const { pathname } = useLocation(); 
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [pathname]);
 
 
   // Remove function
-  const handleRemoveFromCart = (productId) => {
-    dispatch(removeFromCart(productId)); // Dispatch the asyncThunk
+  const handleRemoveFromCart = async (productId) => {
+    try {
+      await dispatch(removeFromCart(productId)).unwrap();
+      console.log("Item removed successfully!");
+    } catch (error) {
+      console.error("Failed to remove item:", error);
+    }
   };
+  
+  
+  
+  
 
 
 
   useEffect(() => {
-    const userId = localStorage.getItem("id");
-if (userId) {
-      // Fetch user data from the API using the userId
-      axios
-        .get(`http://localhost:5000/users/${userId}`)
-        .then((response) => {
-          const userCart = response.data.cart; // Assuming `cart` is an array on the user object
-          // Dispatch the fetched cart to Redux store
-          dispatch(setCart(userCart));
-        })
-        .catch((error) => {
-          console.error("Error fetching user data:", error);
-        });
-    }
-  }, [dispatch,handleRemoveFromCart]);
-
+    dispatch(fetchCartItems()); // Fetch cart items on component load
+    console.log("hai")
+  }, [dispatch]);
  
 
-// increase Qty
-  const increaseQuantityHandler = async (productId) => {
-    const userId = localStorage.getItem("id");
-  
-    if (userId) {
-      const response = await axios.get(`http://localhost:5000/users/${userId}`);
-      const user = response.data;
-      const updatedCart = user.cart.map((product) =>
-        product.id === productId
-          ? { ...product, quantity: product.quantity + 1 }
-          : product
-      );
-      await axios.patch(`http://localhost:5000/users/${userId}`, { cart: updatedCart });
-      dispatch(setCart(updatedCart));
-    }
+
+  const handleIncreaseQuantity = (productId) => {
+    dispatch(increaseQuantity(productId));
   };
+  const handledecreaseQty=(productId)=>{
+    dispatch(decreaseQuantity(productId))
+  }
 
 
 
-// decrease Qty
-  const decreaseQuantityHandler = async (productId) => {
-    const userId = localStorage.getItem("id");
-  
-    if (userId) {
-      const response = await axios.get(`http://localhost:5000/users/${userId}`);
-      const user = response.data;
-      const updatedCart = user.cart.map((product) =>
-        product.id === productId
-          ? { ...product, quantity: product.quantity > 1 ? product.quantity - 1 : product.quantity}
-          : product
-      );
-      await axios.patch(`http://localhost:5000/users/${userId}`, { cart: updatedCart });
-      dispatch(setCart(updatedCart));
-    }
-  };
+
+const handlePlaceOrder=()=>{
+  navigate("/address")
+}
 
  
-  
-  // const totalAmount = () => {
-  //   return cart.reduce((total, product) => total + product.price * product.quantity, 0);
-  // };
-  
-
-
-
-
-
-
-  const handlePlaceOrder = () => {
-    navigate("/order");
-  };
 
 
   return (
@@ -106,7 +71,7 @@ if (userId) {
         <h2 className="text-2xl sm:text-3xl font-bold text-center text-gray-800 mb-6">
           Your Cart
         </h2>
-        {cart.length === 0 ? (
+        {cart?.length === 0 ? (
           <p className="text-center text-lg text-gray-600 py-10">
             Your cart is empty.
           </p>
@@ -114,9 +79,9 @@ if (userId) {
           <div>
 
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 ">
-              {cart.map((product) => (
+              {cart?.map((product) => (
                 <div
-                  key={product.id}
+                  key={product.productId}
                   className="bg-white border border-gray-200 rounded-lg h-96 shadow-md hover:shadow-lg transition overflow-hidden"
                 >
 
@@ -129,13 +94,13 @@ if (userId) {
 
                   <div className="p-4">
                     <h3 className="text-lg font-bold text-gray-800 truncate">
-                      {product.name}
+                      {product.productName}
                     </h3>
                     <p className="text-gray-600 mt-2">Price: ₹{product.price}</p>
                     <div className="flex items-center space-x-2 mt-3">
                       <button
                         className="bg-stone-700 text-white font-semibold py-1 px-3 text-sm rounded-lg hover:bg-stone-600"
-                        onClick={() => increaseQuantityHandler(product.id)}
+                        onClick={() => handleIncreaseQuantity(product.productId)}
                       >
                         +
                       </button>
@@ -144,7 +109,7 @@ if (userId) {
                       </span>
                       <button
                         className="bg-stone-700 text-white font-semibold py-1 px-3 text-sm rounded-lg hover:bg-stone-600"
-                        onClick={() => decreaseQuantityHandler(product.id)}
+                        onClick={() => handledecreaseQty(product.productId)}
                       >
                         -
                       </button>
@@ -157,7 +122,7 @@ if (userId) {
                     </span>
                     <button
                       className="py-1 px-4 bg-red-500 text-white rounded-md hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-300"
-                      onClick={() => handleRemoveFromCart(product.id)}
+                      onClick={() => handleRemoveFromCart(product.productId)}
                     >
                       Remove
                     </button>
@@ -169,7 +134,7 @@ if (userId) {
 
             <div className="mt-8 text-center">
               <h3 className="text-xl font-bold text-gray-800">
-                Total Amount: ₹{totalAmount}
+                Total Amount: ₹{Price}
               </h3>
               <button
                 className="mt-4 py-2 px-6 bg-green-500 text-white rounded-md hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-300"

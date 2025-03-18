@@ -1,76 +1,60 @@
-import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import axios from 'axios';
-
-// Initial state
-const initialState = {
-  adminProduct: [],
-  
-};
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import api from "../../../Api/api";
 
 
-const adminCreateSlice = createSlice({
-    name: 'admin',
-    initialState,
-    reducers: {},
-    extraReducers: (builder) => {
-      builder
-        .addCase(fetchProducts.fulfilled, (state, action) => {
-            state.adminProduct = action.payload;
-          })
-          
-          .addCase(editProduct.fulfilled, (state, action) => {
-            const updatedProduct = action.payload;
-            state.adminProduct = state.adminProduct.map((product) =>
-              product.id === updatedProduct.id ? { ...product, ...updatedProduct } : product
-            );
-          })
-          .addCase(addProduct.fulfilled, (state, action) => {
-            state.adminProduct.push(action.payload);
-          })
-          .addCase(deleteProduct.fulfilled, (state, action) => {
-            const productId = action.payload;
-            state.adminProduct = state.adminProduct.filter((product) => product.id !== productId);
-          });
-        
-    },
-  });
-
-
-
-  export const fetchProducts = createAsyncThunk(
-    'admin/fetchProducts',
-    async () => {
-      const response = await axios.get("http://localhost:5000/products");
-      return response.data;
-    }
-  );
-
-
-
-  export const editProduct = createAsyncThunk(
-  'admin/editProduct',
-  async (updatedProduct) => {
-    await axios.put(`http://localhost:5000/products/${updatedProduct.id}`, updatedProduct);
-    return updatedProduct;
+// Fetch all products
+export const fetchProducts = createAsyncThunk("admin/fetchProducts", async (_, { rejectWithValue }) => {
+  try {
+    const response = await api .get("/api/Products/get-all");
+    return response.data.data;
+    
+  } catch (error) {
+    return rejectWithValue(error.response?.data?.message || "Failed to fetch products");
   }
-);
+});
 
 
-export const addProduct = createAsyncThunk(
-    'admin/addProduct',
-    async (newProduct) => {
-      const response = await axios.post("http://localhost:5000/products", newProduct);
-      return response.data;
-    }
-  );
 
+// Delete a product
+export const deleteProduct = createAsyncThunk("admin/deleteProduct", async (id, { rejectWithValue }) => {
+  try {
+    await api.delete(`/api/Products/deleted/${id}`);
+    return id; // Return ID to remove from state
+  } catch (error) {
+    console.log(error)
+    return rejectWithValue(error.response?.data?.message || "Failed to delete product");
+  }
+});
 
-  export const deleteProduct = createAsyncThunk(
-    'admin/deleteProduct',
-    async (productId) => {
-      await axios.delete(`http://localhost:5000/products/${productId}`);
-      return productId;
-    }
-  );
+// Create slice
+const adminSlice = createSlice({
+  name: "admin",
+  initialState: {
+    products: [],
+    loading: false,
+    error: null,
+  },
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchProducts.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchProducts.fulfilled, (state, action) => {
+        state.loading = false;
+        state.products = action.payload;
+      })
+      .addCase(fetchProducts.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload;
+      })
+      
+      .addCase(deleteProduct.fulfilled, (state, action) => {
+        state.products = state.products.filter((product) => product.id !== action.payload);
+      });
+  },
+});
 
-export default adminCreateSlice.reducer;
+// Export the reducer
+export default adminSlice.reducer;

@@ -2,6 +2,7 @@ import { createAsyncThunk, createSelector, createSlice } from "@reduxjs/toolkit"
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import api from "../../../Api/api";
 
 
 
@@ -24,106 +25,41 @@ const projectSlice = createSlice({
   initialState,
   reducers: {
     setLogin: (state, action) => {
-      state.login = !state.login;
+      state.login = true;
       state.user = action.payload;
       state.errorMessage = "";
     },
-    setLogout: (state, action) => {
+    setLogout: (state) => {
       state.login = false;
       state.user = null;
       state.errorMessage = "";
+
+      // Clear tokens from local storage
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+      localStorage.removeItem("name");
     },
     setErrorMessage: (state, action) => {
       state.errorMessage = action.payload;
     },
     restoreUser: (state) => {
       const userName = localStorage.getItem("name");
-      const userId = localStorage.getItem("id");
+      const accessToken = localStorage.getItem("accessToken");
 
-      if (userName && userId) {
+      if (userName && accessToken) {
         state.login = true;
-        state.user = { name: userName, id: userId };
+        state.user = { name: userName };
       }
-
     },
     setCart: (state, action) => {
       state.cart = action.payload;
-      state.totalAmount = state.cart.reduce(
-        (total, product) => total + product.price * product.quantity,
-        0
-    );
     },
-    addToCart: (state, action) => {
-      const product = action.payload;
-      const existingProduct = state.cart.find((item) => item.id === product.id);
-
-      if (existingProduct) {
-        existingProduct.quantity += 1;
-        toast.success("Quantity added", {
-          position: "top-center",
-          autoClose: 2000,
-        });
-      } else {
-        state.cart.push({ ...product, quantity: 1 });
-        toast.success("Product added to cart successfully!", {
-          position: "top-center",
-          autoClose: 2000,
-        });
-      }
-      state.totalAmount = state.cart.reduce(
-        (total, product) => total + product.price * product.quantity,
-        0
-    );
-      
-
-      // Ensure user is logged in before attempting to update cart in the backend
-      if (state.user && state.user.id) {
-        axios
-          .patch(`http://localhost:5000/users/${state.user.id}`, {
-            cart: state.cart, // Update the cart in the database
-          })
-          .then((response) => {
-            console.log("Cart updated successfully:", response.data);
-          })
-          .catch((error) => {
-            console.error("Error updating cart:", error);
-            toast.error("Failed to update cart", {
-              position: "top-center",
-              autoClose: 2000,
-            });
-          });
-      } else {
-        toast.error("You need to log in to add items to your cart.", {
-          position: "top-center",
-          autoClose: 2000,
-        });
-      }
-    },
-    increaseQuantity: (state, action) => {
-      const productId = action.payload; // Get the product ID from action payload
-      const productInCart = state.cart.find(item => item.id === productId);
-
-      if (productInCart) {
-        productInCart.quantity += 1; // Increase quantity
-      }
-      state.totalAmount = state.cart.reduce(
-        (total, product) => total + product.price * product.quantity,
-        0
-    );
-    },
-    decreaseQuantity: (state, action) => {
-      const productId = action.payload; // Get the product ID from action payload
-      const productInCart = state.cart.find(item => item.id === productId);
-
-      if (productInCart) {
-        productInCart.quantity -= 1; // Increase quantity
-      }
-      state.totalAmount = state.cart.reduce(
-        (total, product) => total + product.price * product.quantity,
-        0
-    );
     
-    },
+    
+    
+   
+
+     
     
 
 
@@ -139,23 +75,16 @@ const projectSlice = createSlice({
         .addCase(searchProducts.rejected, (state) => {
           state.searchResults = []; // Clear results on failure
         })
-        .addCase(removeFromCart.pending, (state) => {
-          // Optionally handle loading state if needed
-        })
-        .addCase(removeFromCart.fulfilled, (state, action) => {
-          state.cart = action.payload; // Update the cart with the new list
-        })
-        .addCase(removeFromCart.rejected, (state) => {
-          // Optionally handle error state if needed
-        })
+       
         .addCase(confirmOrder.fulfilled, (state, action) => {
           state.cart = action.payload.cart;
           state.orders = action.payload.orders;
         })
-        .addCase(fetchCart.fulfilled, (state, action) => {
-          state.cart = action.payload;
-          console.log(state.cart)
+        .addCase(removeFromCart.fulfilled, (state, action) => {
+          // Remove item from Redux state immediately
+          state.cart = state.cart.filter((item) => item.id !== action.payload);
         });
+        
     }
   },
 });
@@ -166,33 +95,27 @@ const projectSlice = createSlice({
 
 export const registerUser = (values, navigate) => async (dispatch) => {
   try {
-    // Check if the email already exists
-    const response = await axios.get(`http://localhost:5000/users?email=${values.email}`);
-    if (response.data.length > 0) {
-      dispatch(projectSlice.actions.setErrorMessage("This email is already registered!"));
-      return;
-    }
+    const response = await api . post("/api/users/Register", values);
 
-    // Register the user
-    await axios.post("http://localhost:5000/users", {
-      ...values,
-      blocked: true,
-      cart: [],
-      orders: [],
-    });
+    if (response.data.statusCode === 200) {
+      dispatch(projectSlice.actions.setErrorMessage(""));
+      navigate("/login", { replace: true });
 
-    // Reset error message and navigate to login
-    dispatch(projectSlice.actions.setErrorMessage(""));
-    navigate("/login", { replace: true });
-    toast.success("You successfully registered", {
+      toast.success("You successfully registered", {
+        position: "top-center",
+        autoClose: 2000,
+      });
+    } 
+  } catch (error) {
+    console.error("Registration error:", error);
+    dispatch(projectSlice.actions.setErrorMessage(error.response.data.message));
+    toast.error(error.response.data.message, {
       position: "top-center",
       autoClose: 2000,
     });
-  } catch (error) {
-    console.error("Registration error:", error);
-    dispatch(projectSlice.actions.setErrorMessage("Something went wrong! Please try again."));
   }
 };
+
 
 
 
@@ -204,41 +127,163 @@ export const registerUser = (values, navigate) => async (dispatch) => {
 // Thunk for login
 export const loginUser = (values, navigate) => async (dispatch) => {
   try {
-    const response = await axios.get(`http://localhost:5000/users?email=${values.email}`);
-    const user = response.data.find((user) => user.email === values.email);
-    console.log(user)
-
-    if (user) {
-      if (user.password === values.password) {
-        if (user.blocked === "true") {
-          dispatch(projectSlice.actions.setErrorMessage("Admin blocked by user. You cannot log in."));
-          return;
-        }
-
-        dispatch(projectSlice.actions.setLogin(user));
-
-        localStorage.setItem("id", user.id);
-        localStorage.setItem("name", user.name);
-
-        if (user.role === "admin") {
-          navigate("/adminlayout");
-        } else {
-          navigate("/");
-          toast.success("You successfully logged in!", {
-            position: "top-center",
-            autoClose: 2000,
-          });
-        }
+    const response = await api.post("/api/users/Login", values);
+    
+    if (response.data.statusCode === 200) {
+      const { accessTocken, refreshTocken,name,role } = response.data.data;
+       console.log(response.data.data)
+      // Store tokens and user data in local storage
+      localStorage.setItem("accessToken", accessTocken);
+      localStorage.setItem("refreshToken", refreshTocken);
+      localStorage.setItem("name", name);
+      localStorage.setItem("Role",role) // Adjust if your API returns user name
+      
+      dispatch(projectSlice.actions.setLogin({ name: name}));
+      
+      if (role === "admin") {
+        navigate("/adminlayout");
       } else {
-        dispatch(projectSlice.actions.setErrorMessage("Incorrect password!"));
+        navigate("/");
       }
+     
+
+      // Show success toast
+      toast.success("You successfully logged in!", {
+        position: "top-center",
+        autoClose: 2000,
+      });
     } else {
-      dispatch(projectSlice.actions.setErrorMessage("User not found! Please register."));
+      toast.error("Invalid login attempt", {
+        position: "top-center",
+        autoClose: 2000,
+      });
     }
   } catch (error) {
-    dispatch(projectSlice.actions.setErrorMessage("Something went wrong! Please try again later."));
+    console.error("Login error:", error);
+    dispatch(projectSlice.actions.setErrorMessage(error.response.data.message));
+    toast.error(error.response.data.message, {
+      position: "top-center",
+      autoClose: 2000,
+    });
   }
 };
+
+
+
+
+
+
+// add to cart
+export const addToCart = (product) => async (dispatch) => {
+   const token = localStorage.getItem("accessToken"); // Check for access token
+  
+      if (!token) {
+        toast.error("Please Login to add Product to cart", {
+          position: "top-center",
+          autoClose: 2000,
+        });
+        return;
+      }
+  try {
+    const response = await api.post(
+      `api/Cart/add-to-cart?productId=${product.id}`
+      
+    );
+  
+
+    if (response.status === 200) {
+      console.log(response)
+      toast.success(response.data.message, {
+        position: "top-center",
+        autoClose: 2000,
+      });
+    } 
+    fetchCartItems();
+    
+  } catch (error) {
+    console.error("Error adding product to cart:", error);
+    toast.error(error.response.data.message, {
+      position: "top-center",
+      autoClose: 2000,
+    });
+  }
+};
+
+
+
+
+
+// Fetch the cart items
+
+export const fetchCartItems = () => async (dispatch) => {
+  try {
+    const response = await api.get("/api/Cart/get-all"); // API Call
+    if (response.data.statusCode === 200) {
+      
+      dispatch(projectSlice.actions.setCart(response.data.data));
+
+      console.log(response.data.data) // Update Redux store
+    }
+  } catch (error) {
+    console.error("Error fetching cart items:", error);
+  }
+};
+
+
+// remove from cart
+
+export const removeFromCart = createAsyncThunk(
+  "app/removeFromCart",
+  async (productId, { dispatch, rejectWithValue }) => {
+    try {
+      const response = await api.delete(`/api/Cart/remove-from-cart?productId=${productId}`);
+
+      if (response.status === 200) {
+        dispatch(fetchCartItems()) // Fetch updated cart after deletion
+        return productId; // Return productId for potential UI optimizations
+      }
+    } catch (error) {
+      console.error("Error removing item:", error);
+      return rejectWithValue(error.response?.data || "Failed to remove item");
+    }
+  }
+);
+
+// Increase Qty
+export const increaseQuantity = createAsyncThunk(
+  "cart/increaseQuantity",
+  async (productId, { dispatch, rejectWithValue }) => {
+    try {
+      const response = await api.put(`/api/Cart/increase-quantity?productId=${productId}`);
+
+      if (response.status === 200) {
+        dispatch(fetchCartItems()); // Refresh cart after updating quantity
+        return productId;
+      }
+    } catch (error) {
+      console.error("Error increasing quantity:", error);
+      return rejectWithValue(error.response?.data || "Failed to increase quantity");
+    }
+  }
+);
+
+export const decreaseQuantity = createAsyncThunk(
+  "cart/decreaseQuantity",
+  async (productId, { dispatch, rejectWithValue }) => {
+    try {
+      const response = await api.put(`/api/Cart/decrease-quantity?productId=${productId}`);
+
+      if (response.status === 200) {
+        dispatch(fetchCartItems()); // Refresh cart after updating quantity
+        return productId;
+      }
+    } catch (error) {
+      console.error("Error decreasing quantity:", error);
+      return rejectWithValue(error.response?.data || "Failed to decrease quantity");
+    }
+  }
+);
+
 
 
 // Thunk to fetch all products
@@ -258,24 +303,8 @@ export const searchProducts = createAsyncThunk(
 );
 
 
-// remove thunk
-export const removeFromCart = createAsyncThunk(
-  'app/removeFromCart',
-  async (productId, { getState }) => {
-    const userId = localStorage.getItem("id");
 
-    if (userId) {
-      const response = await axios.get(`http://localhost:5000/users/${userId}`);
-      const user = response.data;
-      const updatedCart = user.cart.filter((item) => item.id !== productId);
 
-      // Update the cart in the backend
-      await axios.patch(`http://localhost:5000/users/${userId}`, { cart: updatedCart });
-
-      return updatedCart; // Return the updated cart
-    }
-  }
-);
 
 
 //   Order Confirm
@@ -299,7 +328,7 @@ export const confirmOrder = createAsyncThunk("app/confirmOrder", async ({ naviga
   };
 
   user.orders.push(newOrder);
-  user.cart = []; // Clear the cart
+  user.cart = []; 
 
   await axios.patch(`http://localhost:5000/users/${userId}`, {
     cart: user.cart,
@@ -318,13 +347,6 @@ export const confirmOrder = createAsyncThunk("app/confirmOrder", async ({ naviga
 
 });
 
-// Update cart
-// export const fetchCart = createAsyncThunk("app/fetchCart", async () => {
-//   const userId = localStorage.getItem("id");
-//   const response = await axios.get(`http://localhost:5000/users/${userId}`);
-  
-//   return response.data.cart; // Assuming cart is returned
-// });
 
 
 
@@ -332,5 +354,6 @@ export const confirmOrder = createAsyncThunk("app/confirmOrder", async ({ naviga
 
 // Export actions and reducer
 export const { setLogin, setLogout, setErrorMessage, setProducts, setSearchResults, restoreUser, setCart, clearSearchResults, restoreUsersetCart,
-  addToCart, increaseQuantity, decreaseQuantity, } = projectSlice.actions;
-export default projectSlice.reducer;
+    addProductToCart } = projectSlice.actions;
+ 
+export default projectSlice.reducer

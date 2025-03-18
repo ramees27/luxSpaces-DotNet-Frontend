@@ -1,40 +1,41 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../../../../Api/api';
+
 
 const Blocks = () => {
   const [blockedUsers, setBlockedUsers] = useState([]);
 
+  // Fetch all blocked users
   useEffect(() => {
-    // Fetch user data
     fetchBlockedUsers();
   }, []);
 
-  const fetchBlockedUsers = () => {
-    axios.get('http://localhost:5000/users')
-      .then((response) => {
-        // Filter users with `blocked: "true"`
-        const blocked = response.data.filter(user => user.blocked === 'true');
-        setBlockedUsers(blocked);
-      });
+  const fetchBlockedUsers = async () => {
+    try {
+      const response = await api .get('/api/userBlocked');
+      setBlockedUsers(response.data.data); // Assuming API returns an array of blocked users
+    } catch (error) {
+      console.error('Error fetching blocked users:', error.response?.data || error.message);
+    }
   };
 
-  const handleUnblock = (userId) => {
-    // Update the user's `blocked` status
-    axios.patch(`http://localhost:5000/users/${userId}`, { blocked: 'false' })
-      .then(() => {
-        // Remove the unblocked user from the list
-        setBlockedUsers(prevBlockedUsers => prevBlockedUsers.filter(user => user.id !== userId));
-      })
-      .catch((error) => {
-        console.error('Error unblocking the user:', error);
-      });
+  // Handle Unblock User
+  const handleUnblock = async (userId) => {
+    try {
+      const response = await api.post(`/api/user/:Blockid?UserId=${userId}`);
+
+      if (response.status === 200) {
+        fetchBlockedUsers();
+      }
+    } catch (error) {
+      console.error('Error unblocking user:', error.response?.data || error.message);
+    }
+    fetchBlockedUsers();
   };
 
   return (
     <div className="p-6 ml-64">
-      <h1 className="text-4xl font-bold mb-6 text-gray-800">
-        Blocked Users
-      </h1>
+      <h1 className="text-4xl font-bold mb-6 text-gray-800">Blocked Users</h1>
 
       {blockedUsers.length > 0 ? (
         <div className="overflow-x-auto bg-gray-50 p-4 border border-gray-300 rounded-lg">
@@ -48,11 +49,8 @@ const Blocks = () => {
               </tr>
             </thead>
             <tbody>
-              {blockedUsers.map(user => (
-                <tr
-                  key={user.id}
-                  className="bg-white hover:bg-red-100 transition-colors duration-300"
-                >
+              {blockedUsers.map((user) => (
+                <tr key={user.id} className="bg-white hover:bg-red-100 transition-colors duration-300">
                   <td className="px-6 py-4 text-gray-800 font-medium border border-gray-300">{user.id}</td>
                   <td className="px-6 py-4 text-gray-800 font-medium border border-gray-300">{user.email}</td>
                   <td className="px-6 py-4 text-gray-800 font-medium border border-gray-300">{user.name}</td>

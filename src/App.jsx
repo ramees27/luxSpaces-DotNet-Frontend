@@ -26,6 +26,8 @@ import Blocks from './Components/Admin page/adminBlocks/Blocks'
 // import AdminContext from './Components/Admin page/adminUsers/AdminContext/AdminContext'
 import Store from  './Components/Redux/Store'
 import { Provider } from 'react-redux'
+import Address from './Components/Home/Address'
+import Payment from './Components/Home/Payment'
 
 
 function App() {
@@ -53,7 +55,8 @@ function App() {
           <Route path={'/myorders'} element={<MyOrder />} />
           <Route path={'/adminnavbar'} element={<adminNavbar />} />
           <Route path={'/sidebar'} element={<SideBar />} />
-
+          <Route path={'/address'} element={<Address />} />
+          <Route path={'/payment'} element={<Payment />} />
           <Route path={'/adminlayout'} element={<AdminLayout />}>
             <Route index element={<DashBoard />} />
             <Route path={'adminusers'} element={<AdminUsers />} />

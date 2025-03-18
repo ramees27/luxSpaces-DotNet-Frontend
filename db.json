@@ -35,7 +35,30 @@
       "password": "12345678",
       "confirmPassword": "123456789",
       "blocked": "false",
-      "cart": [],
+      "cart": [
+        {
+          "id": "28",
+          "name": "Extendable Dining Table with 6 Chairs",
+          "category": "Dining",
+          "oldprice": "79999",
+          "price": "59999",
+          "image": "https://m.media-amazon.com/images/I/51YMBJ1GygL.jpg",
+          "description": "Versatile dining table with an extendable top and six matching chairs, perfect for larger gatherings.",
+          "stock": 5,
+          "quantity": 1
+        },
+        {
+          "id": "29",
+          "name": "Round Marble Dining Table with 4 Chairs",
+          "category": "Dining",
+          "oldprice": "69999",
+          "price": "52999",
+          "image": "https://m.media-amazon.com/images/I/51Td6nDDtqL.jpg",
+          "description": "Luxurious round dining table with a marble top and four upholstered chairs for a sophisticated look.",
+          "stock": 5,
+          "quantity": 2
+        }
+      ],
       "orders": [
         {
           "date": "11/29/2024, 5:33:24 PM",

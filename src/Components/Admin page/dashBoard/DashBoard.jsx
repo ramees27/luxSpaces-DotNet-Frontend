@@ -1,48 +1,56 @@
 import axios from 'axios';
 import React, { useState, useEffect } from 'react';
-import { Pie } from 'react-chartjs-2';
-import { Chart as ChartJS, ArcElement, Tooltip, Legend } from 'chart.js';
+import api from '../../../../Api/api';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchProducts } from '../../Redux/AdminSlice';
 
 const DashBoard = () => {
+  const dispatch = useDispatch ();
+  const { products, loading, error } = useSelector((state) => state.admin);
   const [stats, setStats] = useState({
     sale: 0,
     product: 0,
     users: 0,
     stocks: 0,
   });
+  useEffect(() => {
+    dispatch(fetchProducts ()); // Fetch products from API via Redux
+    // Fetch categories if needed
+  }, [dispatch]);
 
   useEffect(() => {
-    axios.get('http://localhost:5000/users')
-      .then((response) => {
-        const userCount = response.data.length-1;
-        setStats((prevStats) => ({ ...prevStats, users: userCount }));
-      });
+    if (products && products.length > 0) {
+      setStats((prev) => ({
+        ...prev,
+        product: products.length, // ✅ Total Product Count
+        stocks: products.reduce((total, product) => total + (product.stock || 0), 0), // ✅ Total Stock Count
+      }));
+    }
+  }, [products]);
+  
+  const fetchUsers = async () => {
+    try {
+      const response = await api.get("/api/get-all");
+      setStats(prev => ({ ...prev, users: response.data.data }));
+    } catch (error) {
+      console.error("Error fetching users:", error.response?.data || error.message);
+    }
+  };
 
-    
-    axios.get('http://localhost:5000/users')
-      .then((response) => {
-        const users = response.data;
-        const totalSales = users.reduce((total, user) => {
-          const userSales = user.orders.reduce((orderTotal, order) => orderTotal + order.total, 0);
-          return total + userSales;
-        }, 0);
-        setStats((prevStats) => ({ ...prevStats, sale: totalSales }));
-      });
+  useEffect(() => {
+    // Fetch total sale amount
+    const fetchTotalSales = async () => {
+      try {
+        const response = await api.get("/api/Order/TotalSale");
+        setStats(prev => ({ ...prev, sale: response.data.data })); // ✅ Update only the sale field
+      } catch (error) {
+        console.error("Error fetching total sales:", error);
+      }
+    };
 
-    
-    axios.get('http://localhost:5000/products')
-      .then((response) => {
-        const productCount = response.data.length;
-        setStats((prevStats) => ({ ...prevStats, product: productCount }));
-      });
-
-    
-    axios.get('http://localhost:5000/products')
-      .then((response) => {
-        const stockCount = response.data.reduce ((total, product) => total + Number(product.stock), 0);
-      
-        setStats((prevStats) => ({ ...prevStats, stocks: stockCount }));
-      });
+    fetchTotalSales();
+    fetchUsers();
+     
   }, []);
 
   return (
@@ -55,7 +63,7 @@ const DashBoard = () => {
         </div>
         <div className="bg-gray-900 p-6 rounded-lg shadow-md">
           <h3 className="text-4xl font-bold text-white">Total Users</h3>
-          <p className="text-3xl text-white">{stats.users}</p>
+          <p className="text-3xl text-white">{stats.users.length}</p>
         </div>
         <div className="bg-gray-900 p-6 rounded-lg shadow-md">
           <h3 className="text-4xl font-bold text-white">Products Count</h3>
@@ -71,3 +79,4 @@ const DashBoard = () => {
 };
 
 export default DashBoard;
+

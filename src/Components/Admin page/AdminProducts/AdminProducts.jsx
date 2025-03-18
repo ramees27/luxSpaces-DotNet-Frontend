@@ -1,65 +1,206 @@
-import React, { useState,useEffect } from 'react';
-// import { productContex } from '../adminUsers/AdminContext/AdminContext';
-import axios from 'axios';
-import { useDispatch, useSelector } from 'react-redux';
-import { addProduct, deleteProduct, editProduct, fetchProducts } from '../../Redux/AdminSlice';
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchProducts, deleteProduct } from "../../Redux/AdminSlice";
+import api from "../../../../Api/api";
+import { toast } from "react-toastify";
 
 const AdminProducts = () => {
-
-
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentProduct, setCurrentProduct] = useState(null);
   const [isAdding, setIsAdding] = useState(false);
-  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [categories, setCategory] = useState("Select Category")
+  const [newCategory, setNewCategory] = useState("");
+  const [isAddingNewCategory, setIsAddingNewCategory] = useState(false);
+  const [categoriesDisplay, setCategoriesDisplay] = useState([]);
+  const [IsCategoryModalOpen,setIsCategoryModalOpen]=useState(false)
 
   const dispatch = useDispatch();
-  const adminProduct = useSelector((state) => state.admin.adminProduct);
+  const { products, loading, error } = useSelector((state) => state.admin);
 
   useEffect(() => {
-    dispatch(fetchProducts()); // Fetch products when component mounts
+    dispatch(fetchProducts());
+    CategoryGet()
   }, [dispatch]);
 
+  // Delete product
+  const handleDelete = (id) => {
+    dispatch(deleteProduct(id));
+  };
 
-
-
-
-
-
-// delete
-const handleDelete = (id) => {
-  dispatch(deleteProduct(id));
-};
-
- 
-
+  // Open modal for adding a new product
   const handleAdd = () => {
     setCurrentProduct({
-      name: '',
-      category: '',
-      price: 0,
-      stock: 0,
-      description: '',
-      image: '',
+      Name: "",
+      Price: "",
+      Stock: "",
+      Description: "",
+      Img: null,
+      OldPrice: "",
+      categoryId: "",
     });
     setIsModalOpen(true);
     setIsAdding(true);
   };
 
- const handleSave = () => {
-    if (isAdding) {
-      dispatch(addProduct(currentProduct));
-    } else {
-      dispatch(editProduct(currentProduct));
+
+
+
+
+  const CategoryGet = async () => {
+    try {
+      const responce = await api.get("/api/Products/Category-Get")
+      setCategory(responce.data.data)
+      console.log(setCategory)
     }
-    setIsModalOpen(false);
+    catch (error) {
+      console.error("Error fetching categories:", error);
+    }
+  }
+
+
+  const handleCategoryChange = (e) => {
+    const selectedId = e.target.value;
+    setCurrentProduct((prev) => ({
+      ...prev,
+      categoryId: selectedId,
+    }));
   };
 
 
-  const filteredProducts =
-    selectedCategory === 'All'
-      ? adminProduct
-      : adminProduct.filter((product) => product.category === selectedCategory);
 
+
+  // Save product (add or edit)
+  const handleSave = async () => {
+    if (!currentProduct.Name || !currentProduct.Description || !currentProduct.Img) {
+      alert("Please fill all required fields.");
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("Name", currentProduct.Name.trim());
+    formData.append("Description", currentProduct.Description.trim());
+    formData.append("CategoryId", currentProduct.categoryId);
+    formData.append("Price", currentProduct.Price);
+    formData.append("OldPrice", currentProduct.OldPrice || 0);
+    formData.append("Stock", currentProduct.Stock);
+    if (currentProduct.Img) {
+      formData.append("Img", currentProduct.Img);
+    }
+
+
+    try {
+      if (isAdding) {
+        await api.post("/api/Products/Add-NewProduct", formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+      } else {
+
+        await api.put(`/api/Products/update-product?productId=${currentProduct.id}`, formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        });
+      }
+      setIsModalOpen(false);
+      dispatch(fetchProducts()); // Refresh product list
+      toast.success("Product Added or edited", {
+        position: "top-center",
+        autoClose: 2000,
+      });
+    } catch (error) {
+      console.error("Error saving product:", error.response?.data || error.message);
+      if (error.response?.data?.errors) {
+        console.error("Validation errors:", error.response.data.errors);
+
+      }
+      console.log(error)
+    }
+
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setCurrentProduct((prevProduct) => ({
+      ...prevProduct,
+      [name]: value === "" ? "" : Number(value), // Allow empty input instead of forcing 0
+    }));
+  };
+
+  const fetchCategories = async () => {
+    try {
+      const responce = await api.get("/api/Products/Category-Get")
+      setCategoriesDisplay(responce.data.data)
+      console.log(setCategory)
+    }
+    catch (error) {
+      console.error("Error fetching categories:", error);
+    }
+  }
+
+ 
+
+  const filteredProducts =
+    selectedCategory === "All"
+      ? products
+      : products.filter((product) => product.category === selectedCategory);
+
+
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0]; // Get the selected file
+    if (file) {
+      setCurrentProduct((prev) => ({
+        ...prev,
+        Img: file, // Store the file object
+      }));
+    }
+  };
+
+
+  const handleEdit = async (productId) => {
+    try {
+      const response = await api.get(`/api/Products/productId?id=${productId}`); // Fetch product by ID
+
+      setCurrentProduct({
+        id: response.data.data.id,
+        Name: response.data.data.name || "",
+        Description: response.data.data.description || "",
+        categoryId: response.data.data.categoryId || "",
+        Price: response.data.data.price || 0,
+        OldPrice: response.data.data.oldPrice || 0,
+        Stock: response.data.data.stock || 0,
+        Img: response.data.data.img || null,
+
+      });
+      console.log(response)
+      setIsAdding(false);
+      setIsModalOpen(true);
+
+    } catch (error) {
+      console.error("Error fetching product:", error);
+    }
+  };
+
+
+
+  const handleAddCategory = async () => {
+    if (!newCategory.trim()) {
+      alert("Please enter a category name.");
+      return;
+    }
+
+    try {
+      await api.post("/api/Products/Category-add", { categoryName: newCategory });
+      CategoryGet(); 
+      setIsAddingNewCategory(false)
+      setNewCategory("");
+    } catch (error) {
+      console.error("Error adding category:", error.response?.data || error.message);
+    }
+  };
+
+
+  useEffect(() => {
+    fetchCategories();
+   }, [handleAddCategory]);
   return (
     <div className="p-6 ml-64 select-none">
       <div className="flex justify-between items-center mb-6">
@@ -74,13 +215,14 @@ const handleDelete = (id) => {
             className="border border-gray-300 rounded px-2 py-1"
           >
             <option value="All">All</option>
-            <option value="Living">Living</option>
-            <option value="Bedroom">Bedroom</option>
-            <option value="Office Furniture">Office Furniture</option>
-            <option value="Dining">Dining</option>
-            <option value="Kitchen">Kitchen</option>
+            {categoriesDisplay.map((category) => (
+              <option key={category.categoryId} value={category.categoryName}>
+                {category.categoryName}
+              </option>
+            ))}
           </select>
         </div>
+
         <button
           onClick={handleAdd}
           className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md"
@@ -89,118 +231,179 @@ const handleDelete = (id) => {
         </button>
       </div>
 
-      <div className="overflow-x-auto rounded-lg shadow-lg bg-gray-50 p-4">
-        <table className="table-auto w-full border-collapse">
-          <thead>
-            <tr className="bg-blue-500 text-white">
-              <th className="px-4 py-3">ID</th>
-              <th className="px-4 py-3">Name</th>
-              <th className="px-4 py-3">Category</th>
-              <th className="px-4 py-3">Price</th>
-              <th className="px-4 py-3">Stock</th>
-              <th className="px-4 py-3">Image</th>
-              <th className="px-4 py-3">Description</th>
-              <th className="px-4 py-3">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {filteredProducts.map((product) => (
-              <tr key={product.id} className="border-b hover:bg-gray-100">
-                <td className="px-4 py-3">{product.id}</td>
-                <td className="px-4 py-3">{product.name}</td>
-                <td className="px-4 py-3">{product.category}</td>
-                <td className="px-4 py-3">{product.price}</td>
-                <td className="px-4 py-3">{product.stock}</td>
-                <td className="px-4 py-3">
-                  <img
-                    src={product.image}
-                    alt={product.name}
-                    className="w-16 h-16 object-contain"
-                  />
-                </td>
-                <td className="px-4 py-3">{product.description}</td>
-                <td className="px-4 py-3 flex space-x-2">
-                  <button
-                    onClick={() =>{
-                       setCurrentProduct(product)
-                      setIsModalOpen(true)
-                      setIsAdding(false); 
-                    }}
-                    className="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-md"
-                  >
-                    Edit
-                  </button>
-                  <button
-                    onClick={() => handleDelete(product.id)}
-                    className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md"
-                  >
-                    Delete
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
 
-      {/* Modal for Editing or Adding */}
-      {isModalOpen && currentProduct && (
+      {loading ? (
+        <p>Loading...</p>
+      ) : error ? (
+        <p className="text-red-500">{error}</p>
+      ) : (
+        <div className="overflow-x-auto rounded-lg shadow-lg bg-gray-50 p-4">
+          <table className="table-auto w-full border-collapse">
+            <thead>
+              <tr className="bg-blue-500 text-white">
+                <th className="px-4 py-3">ID</th>
+                <th className="px-4 py-3">Name</th>
+                <th className="px-4 py-3">Category</th>
+                <th className="px-4 py-3">Price</th>
+                <th className="px-4 py-3">Stock</th>
+                <th className="px-4 py-3">Image</th>
+                <th className="px-4 py-3">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {filteredProducts.map((product) => (
+                <tr key={product.id} className="border-b hover:bg-gray-100">
+                  <td className="px-4 py-3">{product.id}</td>
+                  <td className="px-4 py-3">{product.name}</td>
+                  <td className="px-4 py-3">{product.category}</td>
+                  <td className="px-4 py-3">{product.price}</td>
+                  <td className="px-4 py-3">{product.stock}</td>
+                  <td className="px-4 py-3">
+                    <img src={product.imgUrl} alt={product.name} className="w-16 h-16 object-contain" />
+                  </td>
+                  <td className="px-4 py-3 flex space-x-2">
+                    <button
+                      onClick={() => handleEdit(product.id)}
+                      className="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-md"
+                    >
+                      Edit
+                    </button>
+                    <button
+                      onClick={() => handleDelete(product.id)}
+                      className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-md"
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+
+      {/* Modal */}
+
+      {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-white rounded-lg shadow-lg p-6 w-1/3">
-            <h2 className="text-2xl font-bold mb-4">
-              {isAdding ? 'Add New Product' : 'Edit Product'}
-            </h2>
-            <label className="block mb-2">Name:</label>
+          <div className="bg-white p-6 rounded-lg shadow-lg w-96">
+            <h2 className="text-lg font-bold mb-4">{isAdding ? "Add Product" : "Edit Product"}</h2>
+
+            {/* Name */}
+            <label className="block text-sm font-medium text-gray-700 mb-1">Product Name</label>
             <input
               type="text"
-              value={currentProduct.name}
-              onChange={(e) => setCurrentProduct({ ...currentProduct, name: e.target.value })}
-              className="w-full border border-gray-300 rounded px-2 py-1 mb-4"
+              value={currentProduct.Name || ""}
+              onChange={(e) => setCurrentProduct({ ...currentProduct, Name: e.target.value })}
+
+              className="border p-2 w-full mb-3 rounded focus:ring focus:ring-blue-300"
             />
-            <label className="block mb-2">Category:</label>
+
+            {/* Description */}
+            <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
             <input
               type="text"
-              value={currentProduct.category}
-              onChange={(e) => setCurrentProduct({ ...currentProduct, category: e.target.value })}
-              className="w-full border border-gray-300 rounded px-2 py-1 mb-4"
+              value={currentProduct.Description || ""}
+              onChange={(e) => setCurrentProduct({ ...currentProduct, Description: e.target.value })}
+
+              className="border p-2 w-full mb-3 rounded focus:ring focus:ring-blue-300"
             />
-            <label className="block mb-2">Price:</label>
+
+            {/* Category */}
+            <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
+            <select
+              name="categoryId"
+              value={currentProduct.categoryId || ""}
+              onChange={(e) => {
+                if (e.target.value === "new") {
+                  setIsAddingNewCategory(true);
+                } else {
+                  handleCategoryChange(e);
+                  setIsAddingNewCategory(false);
+                }
+              }}
+              className="border p-2 w-full mb-3 rounded focus:ring focus:ring-blue-300"
+            >
+              <option value="">Select Category</option>
+              {categories.map((cat) => (
+                <option key={cat.categoryId} value={cat.categoryId}>
+                  {cat.categoryName}
+                </option>
+              ))}
+              <option value="new">➕ Add New Category</option>
+            </select>
+
+            {isAddingNewCategory && (
+              <div className="flex items-center space-x-2 mt-2">
+                <input
+                  type="text"
+                  placeholder="Enter new category"
+                  value={newCategory}
+                  onChange={(e) => setNewCategory(e.target.value)}
+                  className="border p-2 flex-1 rounded"
+                />
+                <button
+                  onClick={handleAddCategory}
+                  className="bg-blue-500 px-4 py-2 rounded text-white"
+                >
+                  Add
+                </button>
+              </div>
+            )}
+
+            {/* Price */}
+            <label className="block text-sm font-medium text-gray-700 mb-1">Price</label>
             <input
               type="number"
-              value={currentProduct.price}
-              onChange={(e) => setCurrentProduct({ ...currentProduct, price: e.target.value })}
-              className="w-full border border-gray-300 rounded px-2 py-1 mb-4"
+              name="Price"
+              value={currentProduct.Price || ""}
+              onChange={handleInputChange}
+
+              className="border p-2 w-full mb-3 rounded focus:ring focus:ring-blue-300"
             />
-            <label className="block mb-2">Stock:</label>
+
+            {/* Old Price */}
+            <label className="block text-sm font-medium text-gray-700 mb-1">Old Price</label>
             <input
               type="number"
-              value={currentProduct.stock}
-              onChange={(e) => setCurrentProduct({ ...currentProduct, stock: Number(e.target.value) })}
-              className="w-full border border-gray-300 rounded px-2 py-1 mb-4"
+              name="OldPrice"
+              value={currentProduct.OldPrice || ""}
+              onChange={handleInputChange}
+
+              className="border p-2 w-full mb-3 rounded focus:ring focus:ring-blue-300"
             />
-            <label className="block mb-2">Description:</label>
-            <textarea
-              value={currentProduct.description}
-              onChange={(e) => setCurrentProduct({ ...currentProduct, description: e.target.value })}
-              className="w-full border border-gray-300 rounded px-2 py-1 mb-4"
-            />
-            <label className="block mb-2">Image URL:</label>
+
+            {/* Stock */}
+            <label className="block text-sm font-medium text-gray-700 mb-1">Stock</label>
             <input
-              type="text"
-              value={currentProduct.image}
-              onChange={(e) => setCurrentProduct({ ...currentProduct, image: e.target.value })}
-              className="w-full border border-gray-300 rounded px-2 py-1 mb-4"
+              type="number"
+              name="Stock"
+              value={currentProduct.Stock || ""}
+              onChange={handleInputChange}
+
+              className="border p-2 w-full mb-3 rounded focus:ring focus:ring-blue-300"
             />
-            <div className="flex justify-end space-x-4">
+
+            {/* Image Upload */}
+            <label className="block text-sm font-medium text-gray-700 mb-1">Product Image</label>
+            <input
+              type="file"
+              name="Img"
+              onChange={handleImageUpload}
+              className="border p-2 w-full mb-3 rounded focus:ring focus:ring-blue-300"
+            />
+
+            {/* Buttons */}
+            <div className="flex justify-end space-x-2 mt-4">
               <button
                 onClick={() => setIsModalOpen(false)}
-                className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded-md"
+                className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition"
               >
                 Cancel
               </button>
               <button
                 onClick={handleSave}
-                className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md"
+                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
               >
                 Save
               </button>
@@ -208,6 +411,8 @@ const handleDelete = (id) => {
           </div>
         </div>
       )}
+
+
     </div>
   );
 };

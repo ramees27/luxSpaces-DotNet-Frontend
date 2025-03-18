@@ -27,7 +27,7 @@ function Login() {
   });
 
   const handleSubmit = (values) => {
-    dispatch(loginUser(values, navigate));
+    dispatch(loginUser(values,navigate));
   };
 
   return (
