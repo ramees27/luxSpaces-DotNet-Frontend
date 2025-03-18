@@ -14,16 +14,16 @@ const DashBoard = () => {
     stocks: 0,
   });
   useEffect(() => {
-    dispatch(fetchProducts ()); // Fetch products from API via Redux
-    // Fetch categories if needed
+    dispatch(fetchProducts ()); 
+    
   }, [dispatch]);
 
   useEffect(() => {
     if (products && products.length > 0) {
       setStats((prev) => ({
         ...prev,
-        product: products.length, // ✅ Total Product Count
-        stocks: products.reduce((total, product) => total + (product.stock || 0), 0), // ✅ Total Stock Count
+        product: products.length, 
+        stocks: products.reduce((total, product) => total + (product.stock || 0), 0), 
       }));
     }
   }, [products]);
@@ -38,11 +38,11 @@ const DashBoard = () => {
   };
 
   useEffect(() => {
-    // Fetch total sale amount
+
     const fetchTotalSales = async () => {
       try {
         const response = await api.get("/api/Order/TotalSale");
-        setStats(prev => ({ ...prev, sale: response.data.data })); // ✅ Update only the sale field
+        setStats(prev => ({ ...prev, sale: response.data.data })); 
       } catch (error) {
         console.error("Error fetching total sales:", error);
       }

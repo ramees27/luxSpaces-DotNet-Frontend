@@ -4,7 +4,7 @@ import api from "../../../../Api/api";
 const AdminOrders = () => {
   const [orders, setOrders] = useState([]);
 
-  // Fetch orders from API
+  
   useEffect(() => {
     fetchOrders();
   }, []);
@@ -12,7 +12,7 @@ const AdminOrders = () => {
   const fetchOrders = async () => {
     try {
       const response = await api.get("/api/Order/get-order");
-      setOrders(response.data.data); // Assuming response.data.data contains the order array
+      setOrders(response.data.data); 
     } catch (error) {
       console.error("Error fetching orders:", error.response?.data || error.message);
     }
@@ -21,17 +21,17 @@ const AdminOrders = () => {
   
     return (
       <div className="flex">
-        {/* Sidebar takes up space on the left, so we push the content */}
-        <div className="flex-1 ml-64 p-6"> {/* Adjust ml-64 based on your sidebar width */}
+        
+        <div className="flex-1 ml-64 p-6"> 
           <h1 className="text-2xl font-bold text-gray-800 mb-6">Total Order History</h1>
           
-          <div className="overflow-auto max-h-[80vh] pr-4"> {/* Makes the content scrollable if too many orders */}
+          <div className="overflow-auto max-h-[80vh] pr-4">
             {orders.length === 0 ? (
               <p className="text-gray-500">No orders found.</p>
             ) : (
               orders.map((order) => (
                 <div key={order.orderId} className="bg-white shadow-md rounded-lg p-6 mb-6 border border-gray-200">
-                  {/* Order Header */}
+          
                   <div className="flex justify-between items-center border-b pb-4 mb-4">
                     <div>
                       <h2 className="text-lg font-semibold text-gray-800">Order ID:</h2>
@@ -42,7 +42,7 @@ const AdminOrders = () => {
                     </span>
                   </div>
   
-                  {/* Order Details */}
+              
                   <div className="mb-4">
                     <p className="text-gray-700 text-sm">
                       <strong>Date:</strong> {new Date(order.orderDate).toLocaleDateString()}
@@ -52,7 +52,7 @@ const AdminOrders = () => {
                     </p>
                   </div>
   
-                  {/* Shipping Address */}
+                
                   <div className="bg-gray-100 p-4 rounded-md mb-4">
                     <h3 className="text-gray-800 font-semibold">Shipping Address</h3>
                     <p className="text-gray-600 text-sm">{order.address.name}</p>
@@ -60,7 +60,7 @@ const AdminOrders = () => {
                     <p className="text-gray-600 text-sm">{order.address.state} - {order.address.postalCode}</p>
                   </div>
   
-                  {/* Products List */}
+                
                   <h3 className="text-gray-800 font-semibold mb-2">Ordered Items</h3>
                   <div className="grid md:grid-cols-2 gap-4">
                     {order.items.map((item) => (

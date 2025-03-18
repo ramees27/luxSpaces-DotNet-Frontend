@@ -7,7 +7,7 @@ import api from "../../../Api/api";
 const Wishlist = () => {
   const [wishlistItems, setWishlistItems] = useState([]);
 
-  // ✅ Fetch Wishlist Items
+  
   useEffect(() => {
     api.get("/api/WishList/get-all")
       .then((response) => {
@@ -30,7 +30,7 @@ const Wishlist = () => {
         My Wishlist
       </h1>
 
-      {/* ✅ If Wishlist is Empty */}
+      
       {wishlistItems.length === 0 ? (
         <div className="text-center mt-10">
           <FaHeart size={50} className="text-gray-400 mx-auto mb-4" />
@@ -49,10 +49,10 @@ const Wishlist = () => {
               key={product.whishListGetId}
               className="bg-white shadow-lg rounded-lg p-4 transition-transform transform hover:scale-105 hover:shadow-2xl relative"
             >
-              {/* ✅ Remove from Wishlist Button */}
+             
          
 
-              {/* ✅ Product Details */}
+          
               <Link to={`/details/${product.productId}`}>
                 <img
                   src={product.img}

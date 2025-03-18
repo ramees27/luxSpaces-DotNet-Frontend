@@ -8,7 +8,7 @@ import { FaHome } from "react-icons/fa";
 
 const Order = () => {
   const navigate = useNavigate();
-  const dispatch = useDispatch();
+  
 
   const [formData, setFormData] = useState({
     name: "",
@@ -31,11 +31,11 @@ const Order = () => {
     e.preventDefault();
     const payload = {
       name: formData.name,
-      number: parseInt(formData.number, 10) || 0, // Convert number to integer
+      number: parseInt(formData.number, 10) || 0, 
       street: formData.street,
       city: formData.city,
       state: formData.state,
-      postalCode: parseInt(formData.postalCode, 10) || 0, // Ensure postalCode is also an integer
+      postalCode: parseInt(formData.postalCode, 10) || 0, 
     };
     
 
@@ -63,14 +63,14 @@ const Order = () => {
   return (
     <div className="bg-gradient-to-r from-gray-200 to-gray-100 min-h-screen p-6 flex justify-center items-center">
       <div className="flex w-full max-w-4xl bg-white shadow-2xl rounded-2xl overflow-hidden">
-        {/* Address Form Section */}
+
         <form
           className="w-2/3 bg-gradient-to-r from-gray-700 to-gray-400 p-8 text-white rounded-l-2xl"
           onSubmit={handleSubmit}
         >
           <h1 className="text-3xl font-bold mb-6">📍 Add New Address</h1>
 
-          {/* Address Inputs */}
+        
           <div className="grid gap-4">
             <input
               type="text"
@@ -128,7 +128,7 @@ const Order = () => {
             />
           </div>
 
-          {/* Submit Button */}
+        
           <button
             type="submit"
             className="mt-6 w-full bg-blue-500 text-white font-semibold py-3 rounded-lg shadow-lg hover:bg-blue-600 transition duration-300"
@@ -137,14 +137,14 @@ const Order = () => {
           </button>
         </form>
 
-        {/* Sidebar Section */}
+        
         <div className="w-1/3 bg-gray-100 p-8 flex flex-col justify-between items-center rounded-r-2xl">
           <h2 className="text-2xl font-bold text-gray-800">🏡 Address Details</h2>
           <p className="text-gray-600 text-center">
             Ensure your address is correct before proceeding.
           </p>
 
-          {/* Home Button */}
+        
           <button
             onClick={() => navigate("/address")}
             className="flex items-center gap-2 bg-blue-600 text-white font-semibold px-6 py-3 

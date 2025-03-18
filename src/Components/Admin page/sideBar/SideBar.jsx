@@ -11,8 +11,8 @@ function SideBar() {
 
 const dispatch=useDispatch()
   const handleLogout = () => {
-   dispatch(setLogout()); // Dispatch logout action
-    navigate('/login'); // Redirect to login page
+   dispatch(setLogout()); 
+    navigate('/login'); 
     toast.success('You successfully logged out', {
       position: 'top-center',
       autoClose: 2000,
@@ -21,15 +21,14 @@ const dispatch=useDispatch()
 
   return (
     <div className="flex select-none">
-      {/* Sidebar */}
+
       <aside className="fixed top-0 left-0 h-full w-64 bg-gradient-to-b from-gray-800 to-gray-700 text-white shadow-xl border-r border-gray-600 transform-style-3d">
-        {/* Header */}
+    
         <div className="p-6 bg-gradient-to-r from-gray-900 to-gray-800 shadow-inner">
           <h1 className="text-xl font-bold text-white">LuxSpaces Admin</h1>
           <p className="text-sm text-gray-400 mt-1">Admin Name: Admin</p>
         </div>
-
-        {/* Navigation */}
+    
         <nav className="mt-6">
           <ul>
             <Link to={"/adminlayout"}>

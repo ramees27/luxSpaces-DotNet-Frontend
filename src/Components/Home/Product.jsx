@@ -27,8 +27,8 @@ const Product = () => {
 
   const handleAddToCart = (furniture) => {
 
-    // Dispatching addToCart action to Redux
-    dispatch(addToCart(furniture)); // `furniture` is the product being added to the cart
+   
+    dispatch(addToCart(furniture)); 
   };
 
 
@@ -55,7 +55,7 @@ const Product = () => {
     try {
       const response = await api.get("/api/Wishlist/get-all");
       if (response.data?.statusCode === 200) {
-        setWishlist(response.data.data.map((item) => item.id)); // Store only product IDs
+        setWishlist(response.data.data.map((item) => item.id)); 
       }
     } catch (error) {
       console.error("Error fetching wishlist:", error);

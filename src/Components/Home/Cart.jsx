@@ -11,13 +11,13 @@ const Cart = () => {
   const dispatch = useDispatch()
 
   const navigate = useNavigate()
-  // const totalAmount = useSelector((state) => state.app.totalAmount);
+  
   
   const cart = useSelector((state) => state.app.cart.items)
   const Price=useSelector((state)=>state.app.cart.totalPrice)
   
   
-  // const { setCart, totalAmount } = useSelector((state) => state.project); 
+  
 
   const { pathname } = useLocation(); 
   useEffect(() => {
@@ -42,8 +42,8 @@ const Cart = () => {
 
 
   useEffect(() => {
-    dispatch(fetchCartItems()); // Fetch cart items on component load
-    console.log("hai")
+    dispatch(fetchCartItems()); 
+   
   }, [dispatch]);
  
 

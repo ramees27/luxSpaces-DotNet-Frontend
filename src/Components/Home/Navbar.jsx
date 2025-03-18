@@ -78,13 +78,13 @@ const Navbar = () => {
 
 
   useEffect(() => {
-    // Try restoring the user from localStorage when the app loads
+    
     dispatch(restoreUser());
   }, [dispatch]);
 
 
   const handleWishlistClick = () => {
-    const token = localStorage.getItem("accessToken"); // ✅ Check for token in localStorage
+    const token = localStorage.getItem("accessToken"); 
 
     if (token) {
       navigate("/wishlist");
@@ -99,16 +99,16 @@ const Navbar = () => {
 
 
   const handleMyOrdersClick = () => {
-    const token = localStorage.getItem("accessToken"); // Check if the user is logged in
+    const token = localStorage.getItem("accessToken"); 
 
     if (!token) {
       toast.error("Please log in to view your orders", {
         position: "top-center",
         autoClose: 2000,
       });
-      navigate("/login"); // Redirect to login page
+      navigate("/login");
     } else {
-      navigate("/myorders"); // Redirect to My Orders page
+      navigate("/myorders"); 
     }
   };
   return (
@@ -129,7 +129,7 @@ const Navbar = () => {
           </div>
           <div className="flex items-center space-x-6">
             <div className="flex items-center relative">
-              {/* Search Input */}
+             
               <input
                 type="text"
                 placeholder="Search for furniture..."
@@ -138,12 +138,12 @@ const Navbar = () => {
                 className="px-4 py-2 rounded-l-full border border-gray-300 focus:outline-none focus:ring-2 focus:ring-gray-500 sm:w-72"
               />
 
-              {/* Search Button */}
+           
               <button className="bg-gray-600 text-white px-4 py-2 rounded-r-full hover:bg-gray-700 transition duration-300">
                 <FaSearch size={24} />
               </button>
 
-              {/* Search Results Dropdown */}
+             
               {searchResults.length > 0 && (
                 <ul className="absolute top-12 left-0 w-full bg-white border border-gray-300 rounded-lg shadow-md max-h-60 overflow-y-auto z-10">
                   {searchResults.map((product) => (
@@ -152,14 +152,14 @@ const Navbar = () => {
                     className="flex items-center px-4 py-2 cursor-pointer hover:bg-gray-200 transition duration-300"
                     onClick={() => handleProductClick(product.id)}
                   >
-                    {/* Product Image */}
+                   
                     <img
-                      src={product.imgUrl }  // Fallback image
+                      src={product.imgUrl }  
                    
                       className="w-12 h-12 rounded-md object-cover mr-3"
                     />
                     
-                    {/* Product Name */}
+                   
                     <span className="text-gray-800">{product.name}</span>
                   </li>
                   ))}

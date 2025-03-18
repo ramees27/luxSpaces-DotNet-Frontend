@@ -23,12 +23,12 @@ const AdminProducts = () => {
     CategoryGet()
   }, [dispatch]);
 
-  // Delete product
+
   const handleDelete = (id) => {
     dispatch(deleteProduct(id));
   };
 
-  // Open modal for adding a new product
+  
   const handleAdd = () => {
     setCurrentProduct({
       Name: "",
@@ -70,7 +70,7 @@ const AdminProducts = () => {
 
 
 
-  // Save product (add or edit)
+  
   const handleSave = async () => {
     if (!currentProduct.Name || !currentProduct.Description || !currentProduct.Img) {
       alert("Please fill all required fields.");
@@ -101,7 +101,7 @@ const AdminProducts = () => {
         });
       }
       setIsModalOpen(false);
-      dispatch(fetchProducts()); // Refresh product list
+      dispatch(fetchProducts());
       toast.success("Product Added or edited", {
         position: "top-center",
         autoClose: 2000,
@@ -121,7 +121,7 @@ const AdminProducts = () => {
     const { name, value } = e.target;
     setCurrentProduct((prevProduct) => ({
       ...prevProduct,
-      [name]: value === "" ? "" : Number(value), // Allow empty input instead of forcing 0
+      [name]: value === "" ? "" : Number(value), 
     }));
   };
 
@@ -145,11 +145,11 @@ const AdminProducts = () => {
 
 
   const handleImageUpload = (e) => {
-    const file = e.target.files[0]; // Get the selected file
+    const file = e.target.files[0]; 
     if (file) {
       setCurrentProduct((prev) => ({
         ...prev,
-        Img: file, // Store the file object
+        Img: file, 
       }));
     }
   };
@@ -157,7 +157,7 @@ const AdminProducts = () => {
 
   const handleEdit = async (productId) => {
     try {
-      const response = await api.get(`/api/Products/productId?id=${productId}`); // Fetch product by ID
+      const response = await api.get(`/api/Products/productId?id=${productId}`); 
 
       setCurrentProduct({
         id: response.data.data.id,
@@ -282,14 +282,14 @@ const AdminProducts = () => {
         </div>
       )}
 
-      {/* Modal */}
+  
 
       {isModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
           <div className="bg-white p-6 rounded-lg shadow-lg w-96">
             <h2 className="text-lg font-bold mb-4">{isAdding ? "Add Product" : "Edit Product"}</h2>
 
-            {/* Name */}
+            
             <label className="block text-sm font-medium text-gray-700 mb-1">Product Name</label>
             <input
               type="text"
@@ -299,7 +299,7 @@ const AdminProducts = () => {
               className="border p-2 w-full mb-3 rounded focus:ring focus:ring-blue-300"
             />
 
-            {/* Description */}
+          
             <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
             <input
               type="text"
@@ -309,7 +309,7 @@ const AdminProducts = () => {
               className="border p-2 w-full mb-3 rounded focus:ring focus:ring-blue-300"
             />
 
-            {/* Category */}
+            
             <label className="block text-sm font-medium text-gray-700 mb-1">Category</label>
             <select
               name="categoryId"
@@ -351,7 +351,7 @@ const AdminProducts = () => {
               </div>
             )}
 
-            {/* Price */}
+            
             <label className="block text-sm font-medium text-gray-700 mb-1">Price</label>
             <input
               type="number"
@@ -362,7 +362,7 @@ const AdminProducts = () => {
               className="border p-2 w-full mb-3 rounded focus:ring focus:ring-blue-300"
             />
 
-            {/* Old Price */}
+           
             <label className="block text-sm font-medium text-gray-700 mb-1">Old Price</label>
             <input
               type="number"
@@ -373,7 +373,7 @@ const AdminProducts = () => {
               className="border p-2 w-full mb-3 rounded focus:ring focus:ring-blue-300"
             />
 
-            {/* Stock */}
+          
             <label className="block text-sm font-medium text-gray-700 mb-1">Stock</label>
             <input
               type="number"
@@ -384,7 +384,7 @@ const AdminProducts = () => {
               className="border p-2 w-full mb-3 rounded focus:ring focus:ring-blue-300"
             />
 
-            {/* Image Upload */}
+           
             <label className="block text-sm font-medium text-gray-700 mb-1">Product Image</label>
             <input
               type="file"
@@ -393,7 +393,7 @@ const AdminProducts = () => {
               className="border p-2 w-full mb-3 rounded focus:ring focus:ring-blue-300"
             />
 
-            {/* Buttons */}
+          
             <div className="flex justify-end space-x-2 mt-4">
               <button
                 onClick={() => setIsModalOpen(false)}

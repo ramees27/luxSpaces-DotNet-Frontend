@@ -5,21 +5,21 @@ import api from '../../../../Api/api';
 const Blocks = () => {
   const [blockedUsers, setBlockedUsers] = useState([]);
 
-  // Fetch all blocked users
+
   useEffect(() => {
     fetchBlockedUsers();
   }, []);
 
   const fetchBlockedUsers = async () => {
     try {
-      const response = await api .get('/api/userBlocked');
-      setBlockedUsers(response.data.data); // Assuming API returns an array of blocked users
+      const response = await api.get('/api/userBlocked');
+      setBlockedUsers(response.data.data);
     } catch (error) {
       console.error('Error fetching blocked users:', error.response?.data || error.message);
     }
   };
 
-  // Handle Unblock User
+
   const handleUnblock = async (userId) => {
     try {
       const response = await api.post(`/api/user/:Blockid?UserId=${userId}`);

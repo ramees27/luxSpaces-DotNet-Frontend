@@ -3,8 +3,8 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import { registerUser } from "../Redux/Slice"; // Adjust path as needed
-import { toast } from "react-toastify";
+import { registerUser } from "../Redux/Slice";
+
 
 
 function Register() {

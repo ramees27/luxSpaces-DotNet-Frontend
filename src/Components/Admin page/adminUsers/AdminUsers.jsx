@@ -9,10 +9,8 @@ const UsersManagement = () => {
 
   useEffect(() => {
     fetchUsers();
-    // handleBlockUnblockUser(userId)
   }, []);
 
-  // Fetch all users
   const fetchUsers = async () => {
     try {
       const response = await api.get("/api/get-all");
@@ -22,7 +20,7 @@ const UsersManagement = () => {
     }
   };
 
-  // Fetch user's order history
+
   const fetchUserOrders = async (userId) => {
     try {
       const response = await api.get(`/api/Order/get-orderDetailsById?userId=${userId}`);
@@ -33,27 +31,27 @@ const UsersManagement = () => {
     }
   };
 
-  // Handle row click to open modal
+  
   const handleRowClick = async (user) => {
     const userOrders = await fetchUserOrders(user.id);
     setSelectedUser({ ...user, orders: userOrders });
     setIsModalOpen(true);
   };
 
-  // Close modal function
+
   const handleCloseModal = () => {
     setIsModalOpen(false);
     setSelectedUser(null);
   };
 
-  // Handle Block/Unblock User
+  
   const handleBlockUnblockUser = async (userId) => {
     try {
       const response = await api.post(`/api/user/:Blockid?UserId=${userId}`);
 
       if (response.status === 200) {
-        // Assuming backend returns updated block status
-        const updatedStatus = response.data.isBlocked; // `true` or `false`
+      
+        const updatedStatus = response.data.isBlocked; 
         setUsers((prevUsers) =>
           prevUsers.map((user) =>
             user.id === userId ? { ...user, isBlocked: updatedStatus } : user

@@ -46,11 +46,11 @@ const AddressSelection = () => {
         try {
             const response = await api.post(`/api/Order/create-orderRazorPay?price=${Price}`);
             if (response.data.statusCode === 200) {
-                const orderId = response.data.data; // Extract order ID & amount
+                const orderId = response.data.data; 
 
                 console.log("Order Created, ID:", orderId);
 
-                // Ensure Razorpay script is loaded
+        
                 if (typeof window.Razorpay === "undefined") {
                     console.error("Razorpay script not loaded.");
                     toast.error("Payment gateway not available.", {
@@ -61,8 +61,8 @@ const AddressSelection = () => {
                 }
 
                 const options = {
-                    key: "rzp_test_NYZKuDYxfrQMlN", // Replace with your Razorpay Key
-                    amount: Price * 100, // Convert to paise
+                    key: "rzp_test_NYZKuDYxfrQMlN",
+                    amount: Price * 100, 
                     currency: "INR",
                     name: "Lux Spaces",
                     description: "Furniture Purchase",
@@ -84,7 +84,7 @@ const AddressSelection = () => {
                             return;
                         }
 
-                        // Step 2: Verify Payment in Backend
+                  
                         await verifyPayment(paymentResponse);
                     },
                     prefill: {
@@ -128,7 +128,7 @@ const AddressSelection = () => {
                     autoClose: 2000,
                 });
 
-                // Call the PlaceOrder API after successful verification
+        
                 await placeOrder(paymentResponse.razorpay_payment_id);
 
             }
@@ -141,15 +141,14 @@ const AddressSelection = () => {
         }
     };
 
-    // Function to place order after payment verification
     const placeOrder = async (transactionId) => {
         try {
-            // Replace with actual user ID from Redux/auth
+            
             const createOrderDTO = {
-                addressId: selectedAddressId, // The address chosen by the user
-                totalamount: Price, // The final price
+                addressId: selectedAddressId, 
+                totalamount: Price, 
                 transactionId: transactionId
-                // The verified transaction ID
+          
             };
 
 
@@ -175,7 +174,7 @@ const AddressSelection = () => {
     }
 
     const handleDeleteAddress = async (e, addressId) => {
-        e.stopPropagation(); // Prevent parent div click event
+        e.stopPropagation();
          try {
           const response = await api.delete(`/api/Address/delete-address/${addressId}`);
           setAddresses((prev) => prev.filter((addr) => addr.addressId !== addressId));
@@ -197,16 +196,16 @@ const AddressSelection = () => {
 
       return (
         <div className="max-w-6xl mx-auto h-screen flex justify-between gap-6 p-8">
-          {/* Left Side - Order Summary */}
+
           <div className="bg-stone-300 text-black p-6 rounded-2xl shadow-lg flex flex-col justify-between h-full w-1/3">
             <h2 className="text-xl font-bold">Order Summary</h2>
       
-            {/* Total Price */}
+          
             <div className="text-lg font-semibold">
               Total Price: <span className="text-black">₹{Price}</span>
             </div>
       
-            {/* Cancel Order Button */}
+        
             <button
               onClick={() => navigate("/cart")}
               className="w-full bg-red-500 text-white font-semibold py-3 rounded-lg shadow 
@@ -216,12 +215,12 @@ const AddressSelection = () => {
             </button>
           </div>
       
-          {/* Right Side - Address Selection & Actions */}
+        
           <div className="w-2/3 bg-white p-8 rounded-2xl shadow-2xl flex flex-col h-full">
-            {/* Title */}
+          
             <h2 className="text-3xl font-bold text-gray-900 mb-4 text-center">Select an Address</h2>
       
-            {/* Address List (Scrollable if needed) */}
+    
             <div className="flex-grow overflow-auto">
               {addresses.length === 0 ? (
                 <p className="text-gray-500 text-center text-lg">No addresses found. Please add one.</p>
@@ -258,9 +257,9 @@ const AddressSelection = () => {
               )}
             </div>
       
-            {/* Buttons Section */}
+        
             <div className="flex justify-between mt-6">
-              {/* Add Address Button */}
+        
               <button
                 onClick={() => navigate("/order")}
                 className="flex items-center bg-green-600 text-white px-6 py-3 rounded-xl shadow-md hover:bg-green-700 transition duration-300 transform hover:scale-105"
@@ -268,7 +267,7 @@ const AddressSelection = () => {
                 <FaPlus className="mr-2" /> Add Address
               </button>
       
-              {/* Proceed to Payment Button */}
+            
               <button
                 onClick={handlePayment}
                 className={`flex items-center px-6 py-3 rounded-xl shadow-md transition duration-300 transform 

@@ -19,14 +19,14 @@ export const fetchProducts = createAsyncThunk("admin/fetchProducts", async (_, {
 export const deleteProduct = createAsyncThunk("admin/deleteProduct", async (id, { rejectWithValue }) => {
   try {
     await api.delete(`/api/Products/deleted/${id}`);
-    return id; // Return ID to remove from state
+    return id; 
   } catch (error) {
     console.log(error)
     return rejectWithValue(error.response?.data?.message || "Failed to delete product");
   }
 });
 
-// Create slice
+
 const adminSlice = createSlice({
   name: "admin",
   initialState: {
@@ -56,5 +56,5 @@ const adminSlice = createSlice({
   },
 });
 
-// Export the reducer
+
 export default adminSlice.reducer;

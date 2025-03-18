@@ -18,7 +18,7 @@ const Details = () => {
     window.scrollTo(0, 0);
   }, [pathname]);
 
-  // ✅ Fetch Product Details
+  //  Fetch Product Details
   useEffect(() => {
     const fetchProduct = async () => {
       try {
@@ -34,13 +34,13 @@ const Details = () => {
     }
   }, [furnitureId]);
 
-  // ✅ Fetch Wishlist Items on Page Load
+  //  Fetch Wishlist Items on Page Load
   useEffect(() => {
     const fetchWishlist = async () => {
       try {
         const response = await api.get("/api/WishList/get-all");
         if (response.data?.statusCode === 200) {
-          setWishlist(response.data.data.map(item => item.productId)); // Store product IDs
+          setWishlist(response.data.data.map(item => item.productId)); 
         }
       } catch (error) {
         console.error("Error fetching wishlist:", error);
@@ -50,9 +50,9 @@ const Details = () => {
     fetchWishlist();
   }, []);
 
-  // ✅ Handle Wishlist Toggle
+  //  Handle Wishlist Toggle
   const handleWishlistToggle = async (productId) => {
-    const token = localStorage.getItem("accessToken"); // Check for access token
+    const token = localStorage.getItem("accessToken");
 
     if (!token) {
       toast.error("Please log in to manage your wishlist", {
@@ -74,8 +74,8 @@ const Details = () => {
       // Update Wishlist State
       setWishlist((prevWishlist) =>
         prevWishlist.includes(productId)
-          ? prevWishlist.filter((id) => id !== productId) // Remove from wishlist
-          : [...prevWishlist, productId] // Add to wishlist
+          ? prevWishlist.filter((id) => id !== productId) 
+          : [...prevWishlist, productId] 
       );
     } catch (error) {
       console.error("Error updating wishlist:", error);
@@ -86,7 +86,7 @@ const Details = () => {
   return (
     <div className="bg-gray-100 min-h-screen flex items-center justify-center p-6 select-none">
       <div className="max-w-5xl w-full bg-white shadow-2xl rounded-2xl overflow-hidden transform transition-transform duration-300 hover:scale-105 relative">
-        {/* Wishlist Button */}
+      
         <button
           onClick={() => handleWishlistToggle(product.id)}
           className="absolute top-2 right-2 text-gray-500 hover:text-red-600 transition"

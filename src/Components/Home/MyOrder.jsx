@@ -1,6 +1,6 @@
 
 import React, {  useEffect, useState } from "react";
-// import { userContext } from "../Context/Context";
+
 import axios from "axios";
 import { FaHome } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
@@ -11,8 +11,7 @@ import api from "../../../Api/api";
 const MyOrder = () => {
   const [orders, setOrders] = useState ([]);
   const navigate = useNavigate();
-  // const token = useSelector((state) => state.auth.token); // Get authentication token
-
+ 
   useEffect(() => {
     const fetchOrders = async () => {
       try {
@@ -51,7 +50,7 @@ const MyOrder = () => {
                   key={index}
                   className="p-6 rounded-lg shadow-md hover:shadow-lg transition duration-300 bg-stone-900"
                 >
-                  {/* Order Details */}
+               
                   <div className="mb-4">
                     <h3 className="text-lg font-semibold text-white">
                       <span className="text-white">Order ID:</span> {order.orderId}
@@ -67,7 +66,7 @@ const MyOrder = () => {
                     </p>
                   </div>
   
-                  {/* Address Details */}
+                
                   <div className="mb-4 p-4 bg-gray-800 rounded-lg">
                     <h4 className="text-white font-semibold">Delivery Address</h4>
                     <p className="text-gray-300">{order.address.street}, {order.address.city}</p>
@@ -75,7 +74,7 @@ const MyOrder = () => {
                     <p className="text-gray-300">Phone: {order.address.number}</p>
                   </div>
   
-                  {/* Ordered Items */}
+               
                   <div className="space-y-4">
                     {order.items.map((item, idx) => (
                       <div

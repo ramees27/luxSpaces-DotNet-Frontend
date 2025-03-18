@@ -4,7 +4,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { FaHome } from "react-icons/fa";
-import { loginUser } from "../Redux/Slice"; // Adjust the path as needed
+import { loginUser } from "../Redux/Slice";
 
 function Login() {
   const dispatch = useDispatch();
